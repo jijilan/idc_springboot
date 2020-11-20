@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.idc.modules.mapper.SysManagerMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        managerId, userName, userAcount, managerType, passWord, isFlag, ctime
+    </sql>
+
+    <select id="getManagerList" resultType="com.idc.modules.entity.excle.ManagerExcle">
+        SELECT
+        m.managerId,
+        m.userName,
+        m.userAcount,
+        m.passWord,
+        m.managerType,
+        m.managerLevel,
+        m.superId,
+        m.address,
+        m.isFlag,
+        m.ctime,
+        b.sums sums1,
+        ROUND(IFNULL(a.revenueAmount,0),2)num
+        FROM
+        sys_manager m
+        LEFT JOIN (SELECT COUNT(1) sums,s.`managerId` FROM `hz_shop` s GROUP BY s.`managerId`) b ON m.`managerId` = b.`managerId`
+        LEFT JOIN
+        (SELECT
+        SUM(revenueAmount) revenueAmount,
+        f.`managerId`
+        FROM
+        `hz_finance` f
+        WHERE ! ISNULL(f.`managerId`)
+        AND f.`isFlag` = 1
+        GROUP BY f.`managerId`) a
+        ON m.`managerId` = a.managerId
+        WHERE m.managerType = 2 AND  m.managerLevel != 4
+        <if test="userName != null and userName !=''">
+            AND m.userName like '%${userName}%'
+        </if>
+        <if test="userAcount != null and userAcount !=''">
+            AND m.userAcount like '%${userAcount}%'
+        </if>
+        <if test="managerLevel != null and managerLevel !=''">
+            AND m.managerLevel = #{managerLevel}
+        </if>
+        <if test="isFlag != null and isFlag !=''">
+            AND m.isFlag like '%${isFlag}%'
+        </if>
+        <if test="list != null and list.size() > 0">
+            and m.managerId in
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        order by m.ctime desc
+    </select>
+
+    <select id="getBySubId" resultType="com.idc.modules.entity.sub.SysManagerSub">
+        SELECT managerId,managerLevel,superId FROM sys_manager WHERE superId= #{managerId}
+    </select>
+</mapper>

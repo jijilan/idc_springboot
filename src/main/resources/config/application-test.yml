@@ -1,0 +1,86 @@
+spring:
+  ## 数据库相关配置
+  datasource:
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      connection-init-sqls: set names utf8mb4;
+      url: jdbc:mysql://47.106.169.138:3306/idc?useUnicode=true&useSSL=false
+      username: root
+      password: jijl
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: false
+        wall:
+          config:
+            multi-statement-allow: true
+  ## redis相关配置
+  redis:
+    database: 1
+    host: 47.106.169.138
+    password: jijilan..
+    port: 6380
+    timeout: 6000ms  # 连接超时时长（毫秒）
+    jedis:
+      pool:
+        max-active: 1000  # 连接池最大连接数（使用负值表示没有限制）
+        max-wait: -1ms      # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-idle: 10      # 连接池中的最大空闲连接
+        min-idle: 5       # 连接池中的最小空闲连接
+
+## 公共资源
+web:
+  ##静态资源路径
+  staticResourcePath: /javadata/SZJAVA/hznobodyshop/
+  ##项目域名
+  projectPath: https://hznobodyshop.dlc-sz.com/
+  ##欢迎页（可无）
+  welcomePath: /index.html
+  ##二维码地址
+  qrCodePath: ${web.projectPath}downloadQr?type=%s&equipmentNo=%s
+
+##设备
+equipment:
+  ##机器云地址
+  url: http://120.77.72.190:8085/
+  ##门禁
+  door:
+    ##心跳回调地址
+    sys_url: ${web.projectPath}api/door/front/heartbeatCallBack
+    ##远程开门回调地址
+    open_url: ${web.projectPath}api/door/front/coinCallBack
+    ##签名
+    sign: hzNobodayShop
+    ##心跳请求地址
+    heartbeatRequestUrl: ${equipment.url}api/ZhongshanCtl/setCallBackUrl
+    ##照明控制地址
+    lightingControlRequestUrl: ${equipment.url}api/ZhongshanCtl/setLightingPeriod
+    ##控制请求地址
+    workControlRequestUrl: ${equipment.url}api/ZhongshanCtl/guardControl
+  ##扭蛋机
+  gashapon:
+    ##心跳回调地址
+    sys_url: ${web.projectPath}api/gashapon/front/heartbeatCallBack
+    ##投币器输出回调地址
+    open_url: ${web.projectPath}api/gashapon/front/coinCallBack
+    ##签名
+    sign: hzNobodayShop
+    ##心跳请求地址
+    heartbeatRequestUrl: ${equipment.url}api/ZhongshanCtl/setCallBackUrl
+    ##控制请求地址
+    controlRequestUrl: ${equipment.url}api/ZhongshanCtl/coin
+
+
