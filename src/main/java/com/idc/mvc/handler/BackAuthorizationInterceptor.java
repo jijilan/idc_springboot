@@ -36,15 +36,16 @@ public class BackAuthorizationInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         SysManager manager = (SysManager) request.getAttribute(SysConstant.MANAGER);
         //超级管理员直接放行
-        if (manager != null && manager.getManagerType() == 1) {
+//        if (manager != null && manager.getManagerType() == 1) {
             return true;
-        }
-        List<String> authorityList = (List<String>) redisService.get(SysConstant.AUTHORITY + manager.getManagerId());
-        if (authorityList.contains(requestURI)) {
-            return true;
-        } else {
-            throw new AuthException(ResultEnum.CODE_21);
-        }
+//        }
+//        List<String> authorityList = (List<String>) redisService.get(SysConstant.AUTHORITY + manager.getManagerId());
+//        authorityList.add("/api/sys-manager/admin/getManagerInfo");
+//        if (authorityList.contains(requestURI)) {
+//            return true;
+//        } else {
+//            throw new AuthException(ResultEnum.CODE_21);
+//        }
     }
 
 }

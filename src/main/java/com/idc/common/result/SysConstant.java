@@ -7,7 +7,7 @@ package com.idc.common.result;
  **/
 public class SysConstant {
 
-    public static final String PROJECT_NAME = "HZNOBODYSHOP_";
+    public static final String PROJECT_NAME = "IDC_";
 
     public static final String DOOR_EQUIPMENT_NO = "DOOR";
 
@@ -16,7 +16,7 @@ public class SysConstant {
     /**
      * 权限前缀
      */
-    public static final String AUTHORITY = PROJECT_NAME + "authority_";
+    public static final String AUTHORITY = PROJECT_NAME + "authority:";
 
     public static final String TOKEN = "Authorization";
 

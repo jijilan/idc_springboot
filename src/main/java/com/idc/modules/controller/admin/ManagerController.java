@@ -76,7 +76,7 @@ public class ManagerController extends BaseController {
     @PostMapping(value = "/login")
     public ResultView login(@NotBlank(message = "用户名不能为空") String userAccount,
                             @NotBlank(message = "密码不能为空")
-                            @Length(min = 6, max = 20, message = "密码须在长度6-20位之间") String userPassword) {
+                            @Length(min = 4, max = 20, message = "密码须在长度4-20位之间") String userPassword) {
         monitorLogger.info("hello!");
         SysManager manager = iSysManagerService.login(userAccount, userPassword);
         String token = jwtToken(SysConstant.MANAGER_ID, manager.getManagerId(), manager, SysConstant.ADMIN_AUTH_TIMEOUT);
@@ -114,27 +114,27 @@ public class ManagerController extends BaseController {
     /**
      * 新增管理员
      *
-     * @param account
-     * @param password
-     * @param username
+     * @param userAcount
+     * @param passWord
+     * @param userName
      * @return
      */
     @PostMapping("/addManager")
-    public ResultView addManager(@NotBlank(message = "账号不能为空") String account, @NotBlank(message = "名称不能为空") String username
-            , @NotBlank(message = "密码不能为空") @Length(min = 6, max = 20, message = "密码须在长度6-20位之间") String password) {
+    public ResultView addManager(@NotBlank(message = "账号不能为空") String userAcount, @NotBlank(message = "名称不能为空") String userName
+            , @NotBlank(message = "密码不能为空") @Length(min = 4, max = 20, message = "密码须在长度4-20位之间") String passWord) {
         QueryWrapper<SysManager> qw = new QueryWrapper();
-        qw.lambda().eq(SysManager::getUserAcount, account);
+        qw.lambda().eq(SysManager::getUserAcount, userAcount);
         if (iSysManagerService.count(qw) > 0) {
             return ResultView.error("账号已存在");
         }
         SysManager manager = new SysManager()
                 .setManagerId(IdentityUtil.identityId("MAN"))
-                .setUserName(username)
-                .setPassWord(DESCode.encode(password))
-                .setUserAcount(account)
+                .setUserName(userName)
+                .setPassWord(DESCode.encode(passWord))
+                .setUserAcount(userAcount)
                 .setManagerType(DictionaryEnum.MANAGER_TYPE_GENERAL.getCode())
                 .setCtime(new Date())
-                .setIsFlag(DictionaryEnum.IS_DEL_Y.getCode());
+                .setIsFlag(DictionaryEnum.IS_DEL_N.getCode());
         return iSysManagerService.save(manager) ? ResultView.ok() : ResultView.error(ResultEnum.CODE_2);
     }
 
