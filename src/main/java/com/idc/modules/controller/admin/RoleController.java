@@ -100,8 +100,8 @@ public class RoleController {
      * @param qKey 角色id
      */
     @DeleteMapping("/delRole")
-    public ResultView delRole(@Valid QSKey qKey) {
-        return iSysRoleService.delRole(qKey.getKey());
+    public ResultView delRole(@NotBlank(message = "代理商ID不能为空") String roleId) {
+        return iSysRoleService.delRole(roleId);
     }
 
     /**

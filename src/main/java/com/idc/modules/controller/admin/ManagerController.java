@@ -152,180 +152,43 @@ public class ManagerController extends BaseController {
     /**
      * 删除管理员
      *
-     * @param qKey
+     * @param managerId
      * @return
      */
     @DeleteMapping("/delManager")
-    public ResultView delManager(@Valid QSKey qKey) {
-        return iSysManagerService.delManager(qKey.getKey());
+    public ResultView delManager(@NotBlank(message = "代理商ID不能为空") String managerId) {
+        return iSysManagerService.delManager(managerId);
     }
 
-    /**
-     * 修改管理员名称
-     *
-     * @param managerId
-     * @param userName
-     * @return
-     */
-    @PutMapping(value = "/updateManager")
-    public ResultView updateManager(@NotBlank(message = "管理员id不能为空") String managerId, @NotEmpty(message = "用户名称不能为空") String userName) {
-        SysManager manager = new SysManager().setManagerId(managerId).setUserName(userName);
-        return iSysManagerService.updateById(manager) ? ResultView.ok() : ResultView.error(ResultEnum.CODE_2);
-    }
+
 
     /**
      * 获取管理员的角色列表
      *
-     * @param qKey 管理员id
+     * @param managerId 管理员id
      * @return
      */
     @GetMapping("/getRoleListByManager")
-    public ResultView getRoleListByManager(@Valid QSKey qKey) {
-        return ResultView.ok(iSysManagerService.getSysRoleListByManager(qKey.getKey()));
+    public ResultView getRoleListByManager(@NotBlank(message = "管理员id不能为空") String managerId) {
+        return ResultView.ok(iSysManagerService.getSysRoleListByManager(managerId));
     }
 
     /**
      * 设置管理员的权限角色
      *
-     * @param qKey    管理员id
+     * @param managerId    管理员id
      * @param roleIds
      * @return
      */
-    @PutMapping("/setRoleByManager")
-    public ResultView setRoleByManager(@Valid QSKey qKey, @NotBlank(message = "角色集合不能为空") String... roleIds) {
-        return iSysManagerService.setRoleByManager(qKey.getKey(), roleIds);
+    @PostMapping("/setRoleByManager")
+    public ResultView setRoleByManager(@NotBlank(message = "代理商ID不能为空") String managerId, @NotBlank(message = "角色集合不能为空") String roleIds) {
+        return iSysManagerService.setRoleByManager(managerId, roleIds.split(","));
     }
 
 
-    /**
-     * @param qPage
-     * @param userName     名字
-     * @param userAcount   手机号，用户名
-     * @param managerLevel 代理类型
-     * @param isFlag       代理商状态
-     * @return com.laiganhlj.dlc.common.result.ResultView
-     * @Author jijl
-     * @Description: 获取管理员列表
-     * @Date 16:16 2019/2/22
-     **/
-    @GetMapping("/getManagerList")
-    public ResultView getManagerList(QPage qPage, String userName, String userAcount, String managerLevel, String isFlag, HttpServletRequest request) {
-        String managerId = (String) request.getAttribute(SysConstant.MANAGER_ID);
-        SysManager sysManager = (SysManager) redisService.getAuthorizedSubject(managerId);
-        return iSysManagerService.getManagerList(qPage, userName, userAcount, managerLevel, isFlag, sysManager);
-    }
 
 
-    /**
-     * @return com.laiganhlj.dlc.common.result.ResultView
-     * @Author jijl
-     * @Description: 后台新增代理商
-     * @Date 16:41 2019/2/22
-     * @Param [sysManager]
-     **/
-    @PostMapping("/addManagerAll")
-    public ResultView addManagerAll(SysManager sysManager, HttpServletRequest request) {
-        String managerIdis = (String) request.getAttribute(SysConstant.MANAGER_ID);
-        SysManager sysManageris = (SysManager) redisService.getAuthorizedSubject(managerIdis);
-        QueryWrapper<SysManager> qw = new QueryWrapper();
-        qw.lambda().eq(SysManager::getUserAcount, sysManager.getUserAcount());
-        if (iSysManagerService.count(qw) > 0) {
-            return ResultView.error("账号已存在");
-        }
-        String managerId = IdentityUtil.identityId(SysConstant.Table.MANAGER_ID_TOP);
-        SysManager manager = sysManager
-                .setManagerId(managerId)
-                .setPassWord(DESCode.encode(sysManager.getPassWord()))
-                .setManagerType(DictionaryEnum.MANAGER_TYPE_GENERAL.getCode())
-                .setCtime(new Date())
-                .setIsFlag(DictionaryEnum.IS_DEL_N.getCode());
-        SysManagerRole sysManagerRole = new SysManagerRole();
-        //一级代理新增二代理
-//        if (sysManageris.getManagerLevel() == DictionaryEnum.MANAGER_LEVLE_2.getCode()) {
-//            manager.setSuperId(managerIdis);
-//            sysManagerRole.setRoleId(DictionaryEnum.SYS_ROLE_ID_2.getName());
-//            manager.setManagerLevel(DictionaryEnum.MANAGER_LEVLE_3.getCode());
-//        }else{
-//            //总平台新增一级代理
-//            if (sysManager.getManagerLevel() == DictionaryEnum.MANAGER_LEVLE_2.getCode() && sysManageris.getManagerType() == DictionaryEnum.MANAGER_TYPE_ADMIN.getCode()) {
-//                manager.setSuperId(null);
-//                sysManagerRole.setRoleId(DictionaryEnum.SYS_ROLE_ID_1.getName());
-//                //总平台新增区域代理
-//            } else if (sysManager.getManagerLevel() == DictionaryEnum.MANAGER_LEVLE_3.getCode() && sysManageris.getManagerType() == DictionaryEnum.MANAGER_TYPE_ADMIN.getCode()) {
-//                sysManagerRole.setRoleId(DictionaryEnum.SYS_ROLE_ID_2.getName());
-//            }
-//        }
 
-        sysManagerRole.setManagerId(managerId);
-        if (iSysManagerRoleService.save(sysManagerRole)) {
-            return iSysManagerService.save(manager) ? ResultView.ok() : ResultView.error(ResultEnum.CODE_2);
-        } else {
-            return ResultView.error(ResultEnum.CODE_2);
-        }
-    }
-
-    /**
-     * 代理商操作
-     *
-     * @param managerId
-     * @param state     1:正常 2:禁用
-     * @return
-     */
-    @PostMapping("/operationManager")
-    public ResultView operationManager(@NotBlank(message = "代理商ID不能为空") String managerId, int state) {
-        return iSysManagerService.operationManager(managerId, state);
-    }
-
-    /**
-     * @return com.laiganhlj.dlc.common.result.ResultView
-     * @Author jijl
-     * @Description: 获取密码
-     * @Date 11:55 2019/2/25
-     * @Param [passWord]
-     **/
-    @GetMapping("/getPassword")
-    public ResultView getPassword(@NotBlank(message = "密码不能为空") String passWord) {
-        return ResultView.ok(DESCode.decode(passWord));
-    }
-
-    /**
-     * @return com.laiganhlj.dlc.common.result.ResultView
-     * @Author jijl
-     * @Description: 编辑代理商
-     * @Date 13:41 2019/2/25
-     * @Param [sysManager]
-     **/
-    @PostMapping("/editManager")
-    public ResultView editManager(SysManager sysManager) {
-        return iSysManagerService.editManager(sysManager);
-    }
-
-
-    /**
-     * @return com.idc.common.result.ResultView
-     * @Author jijl
-     * @Description: 获取全部一级代理
-     * @Date 11:27 2019/3/6
-     * @Param []
-     **/
-    @GetMapping("/getAllOneAgent")
-    public ResultView getAllOneAgent() {
-        return iSysManagerService.getAllOneAgent();
-    }
-
-    /**
-     * @return com.idc.common.result.ResultView
-     * @Author jijl
-     * @Description: 获取自己下级的二级代理
-     * @Date 11:27 2019/3/6
-     * @Param [] type 1:全部  2：自己的
-     **/
-    @GetMapping("/getAllTwoAgent")
-    public ResultView getAllTwoAgent(HttpServletRequest request, String type) {
-        String managerIdis = (String) request.getAttribute(SysConstant.MANAGER_ID);
-        SysManager sysManager = (SysManager) redisService.getAuthorizedSubject(managerIdis);
-        return iSysManagerService.getAllTwoAgent(sysManager, type);
-    }
 
 
 }
