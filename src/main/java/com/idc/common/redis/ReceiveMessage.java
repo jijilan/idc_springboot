@@ -1,7 +1,5 @@
 package com.idc.common.redis;
 
-import com.idc.common.equipment.entity.door.DoorCallBackEntity;
-import com.idc.common.equipment.service.EDoorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,10 +11,6 @@ import java.util.concurrent.CountDownLatch;
  */
 @Slf4j
 public class ReceiveMessage {
-    @Autowired
-    private DoorCallBackEntity doorCallBackEntity;
-    @Autowired
-    private EDoorService eDoorService;
 
     private CountDownLatch latch;
 
