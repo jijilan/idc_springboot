@@ -1,12 +1,12 @@
 spring:
-  ## 数据库相关配置
+  ## 数据库相关配置 内网
   datasource:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
       connection-init-sqls: set names utf8mb4;
-      url: jdbc:mysql://47.106.169.138:3306/idc?useUnicode=true&useSSL=false
-      username: root
-      password: jijl
+      url: jdbc:mysql://172.17.30.15:3306/idc?useUnicode=true&useSSL=false
+      username: idc
+      password: idc@2020
       initial-size: 5
       min-idle: 5
       max-active: 20
@@ -29,10 +29,10 @@ spring:
             multi-statement-allow: true
   ## redis相关配置
   redis:
-    database: 1
-    host: 47.106.169.138
-    password: jijilan..
-    port: 6380
+    database: 6
+    host: 172.17.30.15
+    password: station
+    port: 6379
     timeout: 6000ms  # 连接超时时长（毫秒）
     jedis:
       pool:
@@ -46,41 +46,9 @@ web:
   ##静态资源路径
   staticResourcePath: /javadata/SZJAVA/hznobodyshop/
   ##项目域名
-  projectPath: https://hznobodyshop.dlc-sz.com/
+  projectPath: https://idc.szsti.com/
   ##欢迎页（可无）
   welcomePath: /index.html
   ##二维码地址
   qrCodePath: ${web.projectPath}downloadQr?type=%s&equipmentNo=%s
-
-##设备
-equipment:
-  ##机器云地址
-  url: http://120.77.72.190:8085/
-  ##门禁
-  door:
-    ##心跳回调地址
-    sys_url: ${web.projectPath}api/door/front/heartbeatCallBack
-    ##远程开门回调地址
-    open_url: ${web.projectPath}api/door/front/coinCallBack
-    ##签名
-    sign: hzNobodayShop
-    ##心跳请求地址
-    heartbeatRequestUrl: ${equipment.url}api/ZhongshanCtl/setCallBackUrl
-    ##照明控制地址
-    lightingControlRequestUrl: ${equipment.url}api/ZhongshanCtl/setLightingPeriod
-    ##控制请求地址
-    workControlRequestUrl: ${equipment.url}api/ZhongshanCtl/guardControl
-  ##扭蛋机
-  gashapon:
-    ##心跳回调地址
-    sys_url: ${web.projectPath}api/gashapon/front/heartbeatCallBack
-    ##投币器输出回调地址
-    open_url: ${web.projectPath}api/gashapon/front/coinCallBack
-    ##签名
-    sign: hzNobodayShop
-    ##心跳请求地址
-    heartbeatRequestUrl: ${equipment.url}api/ZhongshanCtl/setCallBackUrl
-    ##控制请求地址
-    controlRequestUrl: ${equipment.url}api/ZhongshanCtl/coin
-
 
