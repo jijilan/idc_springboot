@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public interface SysUserMapper extends BaseMapper<SysUser> {
 
-    Map loginByUserName(@Param("userName") String userName, @Param("passWord") String passWord);
+    SysUser loginByUserName(@Param("userName") String userName, @Param("passWord") String passWord);
 
 
 }

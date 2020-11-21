@@ -8,6 +8,6 @@
     </sql>
     <!-- 根据用户名和密码进行登录-->
     <select id="loginByUserName" resultType="com.idc.modules.entity.SysUser">
-        SELECT * FROM sys_user WHERE user_name=#userName# and pass_word=#passWord#
+        SELECT * FROM sys_user WHERE user_name=#{userName} and pass_word=#{passWord}
     </select>
 </mapper>

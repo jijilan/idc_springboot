@@ -31,7 +31,9 @@ public class ResultView implements Serializable {
     public static ResultView ok(Object data) {
         return new ResultView(data);
     }
-
+    public static ResultView ok(String msg,Object data) {
+        return new ResultView(200,msg,data);
+    }
     public static ResultView error(ResultEnum resultEnum) {
         return new ResultView(resultEnum.getCode(), resultEnum.getMsg());
     }
@@ -60,12 +62,17 @@ public class ResultView implements Serializable {
         this.time = DateUtils.getCurrentDateTime();
     }
 
+    private ResultView(Integer code, String msg,Object obj) {
+        this.code = code;
+        this.msg = msg;
+        this.data=obj;
+        this.time = DateUtils.getCurrentDateTime();
+    }
     private ResultView(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
         this.time = DateUtils.getCurrentDateTime();
     }
-
     private ResultView(String errMsg) {
         this.code = ResultEnum.CODE_2.getCode();
         this.msg = ResultEnum.CODE_2.getMsg() + errMsg;

@@ -29,7 +29,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public SysUser loginByUserName(String userAccount, String userPassword) {
-
-        return null;
+        return baseMapper.loginByUserName(userAccount,userPassword);
     }
 }
