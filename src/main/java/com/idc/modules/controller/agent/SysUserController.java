@@ -1,10 +1,14 @@
 package com.idc.modules.controller.agent;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.idc.common.annotation.log.SysLog;
+import com.idc.common.redis.RedisService;
 import com.idc.common.result.ResultView;
 import com.idc.common.result.SysConstant;
 import com.idc.common.utils.EmptyUtil;
+import com.idc.common.utils.FileUtils;
+import com.idc.common.utils.IdentityUtil;
 import com.idc.common.utils.MD5Util;
 import com.idc.modules.controller.base.BaseController;
 import com.idc.modules.entity.SysManager;
@@ -20,7 +24,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sun.invoke.empty.Empty;
 
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -37,34 +48,172 @@ import javax.validation.constraints.NotBlank;
 public class SysUserController  extends BaseController {
     @Autowired
     private ISysUserService iSysUserService;
-    @SysLog("用户登录")
+    @Autowired
+    private FileUtils fileUtils;
+    @Autowired
+    private RedisService redisService;
+
+    /**
+     * 登录接口
+     * @param userName
+     * @param password
+     * @param verCode
+     * @param request
+     * @param response
+     * @return
+     */
     @PostMapping(value = "/login")
     public ResultView login(@NotBlank(message = "用户名不能为空") String userName,
-                            @NotBlank(message = "密码不能为空")
-                            @Length(min = 6, max = 20, message = "密码须在长度6-20位之间") String password) {
-
-        password= MD5Util.endCode(password);
+                            @NotBlank(message = "密码不能为空") String password,@NotBlank(message = "验证码不能为空")String verCode,HttpServletRequest request, HttpServletResponse response) {
+        // 验证码是否正确
+        String imgCode=request.getSession().getAttribute("imgCode")+"";
+        if(EmptyUtil.isEmpty(imgCode) || !verCode.equals(imgCode)){
+            return ResultView.error("验证码错误!");
+        }
+        password=MD5Util.endCode(password);
         SysUser sysUser = iSysUserService.loginByUserName(userName,password);
         if (EmptyUtil.isNotEmpty(sysUser)) {
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
-            return ResultView.ok(token);
+            Map resMap=new HashMap();
+            resMap.put("token",token);
+            resMap.put("username",userName);
+            return ResultView.ok(resMap);
         }
         return ResultView.error("账号密码错误");
     }
-    @SysLog("用户注册")
-    @PostMapping(value = "/regist")
+    @PostMapping(value = "/loginByPhone")
+    public ResultView loginByPhone(@NotBlank(message = "手机号不能为空") String phoneNum,@NotBlank(message = "短信验证码不能为空")String verCode) {
+        // 验证手机号是否合法
+        if(!IdentityUtil.isMobileNO(phoneNum)){
+            return ResultView.error("手机号不合法!");
+        }
+        // 验证验证码是否正确
+        String phoneCode=redisService.getAuthorizedSubject(phoneNum+"login")+"";
+        if(EmptyUtil.isEmpty(phoneCode) || !verCode.equals(phoneCode)){
+            return ResultView.error("短信验证码错误!");
+        }
+        QueryWrapper<SysUser> qw = new QueryWrapper<>();
+        qw.lambda().eq(SysUser::getPhoneNum, phoneNum);
+        SysUser sysUser = iSysUserService.getOne(qw);
+        if (EmptyUtil.isNotEmpty(sysUser)) {
+            String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
+            Map resMap=new HashMap();
+            resMap.put("token",token);
+            resMap.put("username",sysUser.getUserName());
+            return ResultView.ok(resMap);
+        }
+        return ResultView.error("账号密码错误");
+    }
+    /**
+     * 手机号注册
+     * @param phoneNum
+     * @param verCode
+     * @return
+     */
+    @PostMapping(value = "/phoneRegist")
     public ResultView regist(@NotBlank(message = "手机号不能为空") @Length(min = 11, max = 11, message = "手机号长度必须为11位") String phoneNum,
-                            @NotBlank(message = "密码不能为空")
-                            @Length(min = 6, max = 20, message = "密码须在长度6-20位之间") String password) {
-
-//        if (EmptyUtil.isNotEmpty(sysUser)) {
-//            String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
-//            return ResultView.ok("注册成功",token);
-//        }
+                            @NotBlank(message = "验证码不能为空")
+                            @Length(min = 6, max = 6, message = "验证码长度必须为6位") String verCode,@NotBlank(message = "密码不能为空") String passWord) {
+        // 验证手机号是否合法
+        if(!IdentityUtil.isMobileNO(phoneNum)){
+            return ResultView.error("手机号不合法!");
+        }
+        // 验证验证码是否正确
+        String phoneCode=redisService.getAuthorizedSubject(phoneNum+"regist")+"";
+        if(EmptyUtil.isEmpty(phoneCode) || !verCode.equals(phoneCode)){
+            return ResultView.error("手机验证码错误!");
+        }
+        SysUser sysUser=new SysUser();
+        sysUser.setUserName(phoneNum);
+        sysUser.setPhoneNum(phoneNum);
+        sysUser.setPassWord(MD5Util.endCode(passWord));
+        boolean saveUser=iSysUserService.save(sysUser);
+        // 将数据重新查出来获取id
+        QueryWrapper<SysUser> qw = new QueryWrapper<>();
+        qw.lambda().eq(SysUser::getUserName, sysUser.getUserName());
+        sysUser=iSysUserService.getOne(qw);
+        if (saveUser) {
+            String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
+            return ResultView.ok("注册成功",token);
+        }
         return ResultView.error("注册失败");
     }
 
+    /**
+     * 获取登录图形验证码
+     * @param request
+     * @param response
+     */
+    @PostMapping(value = "/verifCode")
+    public void verifCode(HttpServletRequest request, HttpServletResponse response) {
+        // 通知浏览器不要缓存
+        response.setHeader("Expires", "-1");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setHeader("Pragma", "-1");
+        Map imgMap= fileUtils.getImageVerifCode();
+        String resCodeStr=imgMap.get("sRand")+"";
+        BufferedImage image=(BufferedImage)imgMap.get("image");
+        request.getSession().setAttribute("imgCode", resCodeStr);
+        System.out.println("********************************************验证码："+resCodeStr);
+        try {
+            ImageIO.write(image, "jpg", response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    /**
+     * 获取注册验证码-根据手机号
+     * @param phoneNum
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "/registPhoneCode")
+    public ResultView registPhoneCode(@NotBlank(message = "手机号不能为空") @Length(min = 11, max = 11, message = "手机号长度必须为11位") String phoneNum,HttpServletRequest request, HttpServletResponse response) {
+        // 验证手机号是否合法
+        if(!IdentityUtil.isMobileNO(phoneNum)){
+            return ResultView.error("手机号不合法!");
+        }
+        // 查询当前手机号是否被注册
+        QueryWrapper<SysUser> qw = new QueryWrapper<>();
+        qw.lambda().eq(SysUser::getPhoneNum, phoneNum);
+        SysUser sysUser = iSysUserService.getOne(qw);
+        if(EmptyUtil.isNotEmpty(sysUser)){
+            return ResultView.error("该手机号已被注册!");
+        }
+
+        String phoneCode=redisService.getAuthorizedSubject(phoneNum+"regist")+"";
+        if(EmptyUtil.isNotEmpty(phoneCode)){
+            return ResultView.error("请勿重复获取验证码!");
+        }
+        phoneCode=IdentityUtil.getRandomNum(6);
+        // 往redis中设置验证码
+        redisService.setAuthorizedSubject(phoneNum+"regist", phoneCode, 180);
+        return ResultView.ok("发送成功",phoneCode);
+    }
+    /**
+     * 获取登录验证码-根据手机号
+     * @param phoneNum
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping(value = "/loginPhoneCode")
+    public ResultView loginPhoneCode(@NotBlank(message = "手机号不能为空") @Length(min = 11, max = 11, message = "手机号长度必须为11位") String phoneNum,HttpServletRequest request, HttpServletResponse response) {
+        // 验证手机号是否合法
+        if(!IdentityUtil.isMobileNO(phoneNum)){
+            return ResultView.error("手机号不合法!");
+        }
+        String phoneCode=redisService.getAuthorizedSubject(phoneNum+"login")+"";
+        if(EmptyUtil.isNotEmpty(phoneCode)){
+            return ResultView.error("请勿重复获取验证码!");
+        }
+        phoneCode=IdentityUtil.getRandomNum(6);
+        // 往redis中设置验证码
+        redisService.setAuthorizedSubject(phoneNum+"login", phoneCode, 180);
+        return ResultView.ok("发送成功",phoneCode);
+    }
 
 
 }

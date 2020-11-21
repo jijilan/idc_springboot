@@ -158,7 +158,7 @@ public class MD5Util {
 	}
 
 	public static void main(String[] args) {
-		System.out.println("加密："+endCode("123456"));
+		System.out.println("加密："+endCode("Aa@123456"));
 		System.out.println("解密："+decCode("nfDlLAgAWEg="));
 	}
 

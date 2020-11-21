@@ -51,14 +51,14 @@ public class ResultView implements Serializable {
     }
 
     private ResultView() {
-        this.code = ResultEnum.CODE_1.getCode();
-        this.msg = ResultEnum.CODE_1.getMsg();
+        this.code = ResultEnum.CODE_200.getCode();
+        this.msg = ResultEnum.CODE_200.getMsg();
     }
 
     private ResultView(Object data) {
         this.data = data;
-        this.code = ResultEnum.CODE_1.getCode();
-        this.msg = ResultEnum.CODE_1.getMsg();
+        this.code = ResultEnum.CODE_200.getCode();
+        this.msg = ResultEnum.CODE_200.getMsg();
         this.time = DateUtils.getCurrentDateTime();
     }
 

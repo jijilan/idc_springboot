@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class IdentityUtil {
 
@@ -120,7 +122,22 @@ public class IdentityUtil {
         }
         return ip;
     }
-
+    /**
+     * 验证手机号是否符合规范
+     * @param mobiles 手机号
+     * @return
+     */
+    public static boolean isMobileNO(String mobiles){
+        String regex = "^((13[0-9])|(14[0-9])|(15([0-9]))|(17[0-9])|(18[0-9]))\\d{8}$";
+        if(mobiles.length() != 11){
+            return false;
+        }else{
+            Pattern p = Pattern.compile(regex);
+            Matcher m = p.matcher(mobiles);
+            boolean isMatch = m.matches();
+            return isMatch;
+        }
+    }
     /**
      * 获取客户端IP
      *
@@ -165,12 +182,7 @@ public class IdentityUtil {
     }
 
 
-//    public static void main(String[] args) {
-//        String urlTop = "http://www.baidu.com";
-//        String url = "http://www.baidu.com/aaa?type=1&num=sdfjdjkfh-1";
-//        for (String i : analysisQRcodeToArray(urlTop, url)
-//        ) {
-//            System.out.println(i);
-//        }
-//    }
+    public static void main(String[] args) {
+        isMobileNO("1234567891x");
+    }
 }

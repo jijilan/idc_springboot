@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author Dylan
@@ -23,6 +23,9 @@ import lombok.experimental.Accessors;
 public class SysUser extends Model<SysUser> {
 
     private static final long serialVersionUID = 1L;
+    public SysUser(){
+        isActive=0;
+    }
 
     /**
      * 自增id
