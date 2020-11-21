@@ -33,7 +33,8 @@ public class FileController extends BaseController {
     @PostMapping("/front/upload")
     public ResultView appFileUpload(@RequestParam("file") MultipartFile[] file,
                                     @RequestParam(value = "fileName", required = false, defaultValue = "images") String fileName) throws MyException {
-        return ResultView.ok(UploadFileUtil.flowUpload(file, webResource.getStaticResourcePath(), fileName));
+//        return ResultView.ok(UploadFileUtil.flowUpload(file, webResource.getStaticResourcePath(), fileName));
+        return ResultView.ok("https://znjyz.szsti.org/iHome/static/img/login_bg1.2759cf6b.png");
     }
 
     /**
