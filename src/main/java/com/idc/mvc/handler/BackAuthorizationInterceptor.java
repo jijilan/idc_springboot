@@ -25,7 +25,7 @@ public class BackAuthorizationInterceptor implements HandlerInterceptor {
     /**
      * @Description 权限拦截 接口权限
      * @Date 2020/8/20 21:35
-     * @Author liangshihao
+     * @Author jijl
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {

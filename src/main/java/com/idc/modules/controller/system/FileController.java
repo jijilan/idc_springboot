@@ -28,7 +28,7 @@ public class FileController extends BaseController {
     /**
      * @Description 文件上传
      * @Date 2020/7/11 20:33
-     * @Author liangshihao
+     * @Author jijl
      */
     @PostMapping("/front/upload")
     public ResultView appFileUpload(@RequestParam("file") MultipartFile[] file,
@@ -39,7 +39,7 @@ public class FileController extends BaseController {
     /**
      * @Description 文件上传
      * @Date 2020/7/11 20:33
-     * @Author liangshihao
+     * @Author jijl
      */
     @PostMapping("/admin/upload")
     public ResultView adminFileUpload(@RequestParam("file") MultipartFile[] file,
