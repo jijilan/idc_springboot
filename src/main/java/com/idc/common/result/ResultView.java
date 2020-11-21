@@ -1,9 +1,11 @@
 package com.idc.common.result;
 
 import com.idc.common.enums.ResultEnum;
+import com.idc.common.utils.DateUtils;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * @Author: jijl
@@ -19,7 +21,8 @@ public class ResultView implements Serializable {
 
     private Object data;
 
-    private long time;
+    private String time;
+
 
     public static ResultView ok() {
         return new ResultView();
@@ -54,18 +57,18 @@ public class ResultView implements Serializable {
         this.data = data;
         this.code = ResultEnum.CODE_1.getCode();
         this.msg = ResultEnum.CODE_1.getMsg();
-        this.time = System.currentTimeMillis();
+        this.time = DateUtils.getCurrentDateTime();
     }
 
     private ResultView(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
-        this.time = System.currentTimeMillis();
+        this.time = DateUtils.getCurrentDateTime();
     }
 
     private ResultView(String errMsg) {
         this.code = ResultEnum.CODE_2.getCode();
         this.msg = ResultEnum.CODE_2.getMsg() + errMsg;
-        this.time = System.currentTimeMillis();
+        this.time = DateUtils.getCurrentDateTime();
     }
 }

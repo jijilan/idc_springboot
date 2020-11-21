@@ -56,10 +56,11 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         //区分是登录日志-还是业务日志
         String login = "login";
         if (methodName.contains(login)) {
-            ResultView resultView = (ResultView) joinPoint.proceed();
-            String token = (String) resultView.getData();
-            String managerId = JwtUtil.getUniqueId(token, SysConstant.MANAGER_ID);
-            sysManager = (SysManager) redisService.getAuthorizedSubject(managerId);
+//            ResultView resultView = (ResultView) joinPoint.proceed();
+//            String token = (String) resultView.getData();
+//            String managerId = JwtUtil.getUniqueId(token, SysConstant.MANAGER_ID);
+//            sysManager = (SysManager) redisService.getAuthorizedSubject(managerId);
+            sysLog_.setUsername(joinPoint.getArgs()[0]+"");
         } else {
             sysManager = (SysManager) request.getAttribute(SysConstant.MANAGER);
         }

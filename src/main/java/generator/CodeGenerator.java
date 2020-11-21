@@ -54,7 +54,7 @@ public class CodeGenerator {
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
         gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("jijl");
+        gc.setAuthor("Dylan");
         gc.setOpen(false);
         gc.setBaseColumnList(true);
         gc.setActiveRecord(true);
@@ -65,9 +65,9 @@ public class CodeGenerator {
         dsc.setDbType(DbType.MYSQL);
         // dsc.setSchemaName("public");
         dsc.setDriverName("com.mysql.jdbc.Driver");
-        dsc.setUsername("wrshop_root");
-        dsc.setPassword("SZwrshop@123123");
-        dsc.setUrl("jdbc:mysql://rm-wz9at4hz13l4e5vw58o.mysql.rds.aliyuncs.com/hznobodyshop?useUnicode=true&useSSL=false");
+        dsc.setUsername("idc");
+        dsc.setPassword("idc@2020");
+        dsc.setUrl("jdbc:mysql://172.17.30.15:3306/idc?useUnicode=true&useSSL=false");
         dsc.setTypeConvert(new MySqlTypeConvert() {
 
             // 自定义数据库表字段类型转换【可选】
@@ -120,7 +120,8 @@ public class CodeGenerator {
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
-        strategy.setTablePrefix(new String[]{"hz_"});
+//        strategy.setTablePrefix("sys_user");
+        strategy.setInclude("sys_user");
         strategy.setControllerMappingHyphenStyle(true);
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
