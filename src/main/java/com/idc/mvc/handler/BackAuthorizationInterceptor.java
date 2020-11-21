@@ -1,7 +1,5 @@
 package com.idc.mvc.handler;
 
-import com.idc.common.enums.ResultEnum;
-import com.idc.common.exception.AuthException;
 import com.idc.common.redis.RedisService;
 import com.idc.common.result.SysConstant;
 import com.idc.modules.entity.SysManager;
@@ -11,7 +9,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * @auther: jijl
@@ -26,7 +23,7 @@ public class BackAuthorizationInterceptor implements HandlerInterceptor {
     private RedisService redisService;
 
     /**
-     * @Description 权限拦截
+     * @Description 权限拦截 接口权限
      * @Date 2020/8/20 21:35
      * @Author liangshihao
      */
