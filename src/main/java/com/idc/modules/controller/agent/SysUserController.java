@@ -1,6 +1,7 @@
 package com.idc.modules.controller.agent;
 
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.idc.common.annotation.log.SysLog;
@@ -74,12 +75,12 @@ public class SysUserController  extends BaseController {
         }
         password=MD5Util.endCode(password);
         SysUser sysUser = iSysUserService.loginByUserName(userName,password);
+        sysUser.setPassWord("");
         if (EmptyUtil.isNotEmpty(sysUser)) {
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
             resMap.put("token",token);
-            resMap.put("username",userName);
-            resMap.put("userId",sysUser.getId());
+            resMap.put("user", JSONUtils.toJSONString(sysUser));
             return ResultView.ok(resMap);
         }
         return ResultView.error("账号密码错误");
@@ -98,11 +99,12 @@ public class SysUserController  extends BaseController {
         QueryWrapper<SysUser> qw = new QueryWrapper<>();
         qw.lambda().eq(SysUser::getPhoneNum, phoneNum);
         SysUser sysUser = iSysUserService.getOne(qw);
+        sysUser.setPassWord("");
         if (EmptyUtil.isNotEmpty(sysUser)) {
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
             resMap.put("token",token);
-            resMap.put("username",sysUser.getUserName());
+            resMap.put("user", JSONUtils.toJSONString(sysUser));
             return ResultView.ok(resMap);
         }
         return ResultView.error("账号密码错误");
