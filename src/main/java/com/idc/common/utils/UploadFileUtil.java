@@ -140,8 +140,10 @@ public class UploadFileUtil {
                 if (!attach[i].isEmpty()) {
                     // 获取原文件名
                     String oldFileName = attach[i].getOriginalFilename();
+                    // 获取原文件名的后缀
+                    String prefix = FilenameUtils.getExtension(oldFileName);
                     // 拼接生成的文件名称
-                    fileName=IdentityUtil.uuid()+oldFileName.substring(oldFileName.lastIndexOf("."),oldFileName.length()-1);
+                    fileName=IdentityUtil.uuid()+prefix;
                     int filesize = 5*1024*1024;
                     if (attach[i].getSize() > filesize) {
                         log.info("上传大小不能超过5M");
