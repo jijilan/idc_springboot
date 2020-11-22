@@ -55,7 +55,7 @@ public class CompanyTypeController extends BaseController {
      */
     @GetMapping("/getAgentInfo")
     public ResultView getManagerInfo(HttpServletRequest request) {
-        String userId = (String) request.getAttribute(SysConstant.USER);
+        String userId = (String) request.getAttribute(SysConstant.USER_ID);
         SysUser sysUser= (SysUser) redisService.getAuthorizedSubject(userId);
         return ResultView.ok(sysUser);
     }
