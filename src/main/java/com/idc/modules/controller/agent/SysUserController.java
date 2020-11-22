@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -144,7 +145,7 @@ public class SysUserController  extends BaseController {
      * @param request
      * @param response
      */
-    @PostMapping(value = "/verifCode")
+    @GetMapping(value = "/verifCode")
     public void verifCode(HttpServletRequest request, HttpServletResponse response) {
         // 通知浏览器不要缓存
         response.setHeader("Expires", "-1");
