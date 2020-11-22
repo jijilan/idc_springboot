@@ -36,7 +36,17 @@ public class DateUtils {
         datestr = df.format(new Date());
         return datestr;
     }
-
+    /**
+     * 获取当前日期 自定义格式:yyyy/MM/dd
+     *
+     * @return
+     */
+    public static String getCurrentDate(String formatDate) {
+        String datestr = null;
+        SimpleDateFormat df = new SimpleDateFormat(formatDate);
+        datestr = df.format(new Date());
+        return datestr;
+    }
     /**
      * 获取当前日期时间 格式:yyyy-MM-dd HH:mm:ss
      *

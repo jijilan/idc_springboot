@@ -19,6 +19,10 @@ public class WebResource {
     private String staticResourcePath;
 
     private String welcomePath;
+    // 文件上传地址
+    private String fileUploadPath;
+    // 文件访问地址
+    private String fileReadUrl;
 
     private String projectPath;
 

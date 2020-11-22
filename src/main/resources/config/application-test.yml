@@ -45,6 +45,13 @@ spring:
 web:
   ##静态资源路径
   staticResourcePath: /javadata/SZJAVA/hznobodyshop/
+
+  ## 文件上传路径
+#  fileUploadPath: D:\testFile\upload\
+  fileUploadPath: /www/server/appStore/idcSaveFile
+
+  ## 文件代理地址
+  fileReadUrl: http://121.35.9.106:28089/idcSaveFile/
   ##项目域名
   projectPath: https://idc.szsti.com/
   ##欢迎页（可无）

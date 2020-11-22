@@ -3,6 +3,7 @@ package com.idc.modules.controller.system;
 
 import com.idc.common.enums.ResultEnum;
 import com.idc.common.result.ResultView;
+import com.idc.common.utils.EmptyUtil;
 import com.idc.common.utils.QRCodeUtil;
 import com.idc.modules.controller.base.BaseController;
 import com.idc.common.exception.MyException;
@@ -30,11 +31,18 @@ public class FileController extends BaseController {
      * @Date 2020/7/11 20:33
      * @Author jijl
      */
-    @PostMapping("/front/upload")
-    public ResultView appFileUpload(@RequestParam("file") MultipartFile[] file,
-                                    @RequestParam(value = "fileName", required = false, defaultValue = "images") String fileName) throws MyException {
-//        return ResultView.ok(UploadFileUtil.flowUpload(file, webResource.getStaticResourcePath(), fileName));
-        return ResultView.ok("https://znjyz.szsti.org/iHome/static/img/login_bg1.2759cf6b.png");
+    @PostMapping("/agent/uploadAnyType")
+    public ResultView fileUploadAnyType(@RequestParam("file") MultipartFile[] file) throws MyException {
+        if(EmptyUtil.isEmpty(file)){
+            return ResultView.error("上传文件为空!");
+        }
+        String resFileStr=UploadFileUtil.fileUploadAnyType(file, webResource.getFileUploadPath(),webResource.getFileReadUrl());
+        if(EmptyUtil.isNotEmpty(resFileStr)){
+            return ResultView.ok(resFileStr);
+        }else{
+            return ResultView.error("上传文件失败!");
+        }
+
     }
 
     /**

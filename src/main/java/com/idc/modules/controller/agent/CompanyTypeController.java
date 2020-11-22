@@ -4,6 +4,7 @@ package com.idc.modules.controller.agent;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.idc.common.result.ResultView;
 import com.idc.modules.entity.CompanyType;
+import com.idc.modules.entity.SysUser;
 import com.idc.modules.service.ICompanyTypeService;
 import com.idc.modules.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -34,6 +37,8 @@ import java.util.List;
 public class CompanyTypeController {
     @Autowired
     private ICompanyTypeService iCompanyTypeService;
+    @Autowired
+    private ISysUserService iSysUserService;
 
     /**
      * 获取品牌制造商和代理商的列表
@@ -45,4 +50,25 @@ public class CompanyTypeController {
         List<CompanyType> companyTypes=iCompanyTypeService.list(queryWrapper);
         return ResultView.ok("查询成功",companyTypes);
     }
+
+    /**
+     * 检查当前用户是否绑定企业类型
+     * @param userId
+     * @return
+     */
+    @PostMapping(value = "/CheckUserCompanyType")
+    public ResultView CheckUserCompanyType(@NotBlank(message = "用户id不能为空") String userId) {
+        Map resMap=new HashMap<>();
+        QueryWrapper<SysUser> queryWrapper=new QueryWrapper<>();
+        queryWrapper.lambda().eq(SysUser::getId,userId);
+        SysUser sysUser=iSysUserService.getOne(queryWrapper);
+        if(sysUser.getCType()==0){
+            resMap.put("isBind",0);
+        }else{
+            resMap.put("isBind",1);
+        }
+        resMap.put("cType",sysUser.getCType());
+        return ResultView.ok("查询成功",resMap);
+    }
+
 }

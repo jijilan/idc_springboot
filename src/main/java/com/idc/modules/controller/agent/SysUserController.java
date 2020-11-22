@@ -78,6 +78,7 @@ public class SysUserController  extends BaseController {
             Map resMap=new HashMap();
             resMap.put("token",token);
             resMap.put("username",userName);
+            resMap.put("userId",sysUser.getId());
             return ResultView.ok(resMap);
         }
         return ResultView.error("账号密码错误");

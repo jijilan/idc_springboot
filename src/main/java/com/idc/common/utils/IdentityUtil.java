@@ -183,6 +183,6 @@ public class IdentityUtil {
 
 
     public static void main(String[] args) {
-        isMobileNO("1234567891x");
+        System.out.println(uuid());
     }
 }
