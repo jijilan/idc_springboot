@@ -2,7 +2,6 @@ package com.idc.modules.controller.agent;
 
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.idc.common.annotation.log.SysLog;
 import com.idc.common.redis.RedisService;
 import com.idc.common.result.ResultView;
 import com.idc.common.result.SysConstant;
@@ -11,7 +10,6 @@ import com.idc.common.utils.FileUtils;
 import com.idc.common.utils.IdentityUtil;
 import com.idc.common.utils.MD5Util;
 import com.idc.modules.controller.base.BaseController;
-import com.idc.modules.entity.SysManager;
 import com.idc.modules.entity.SysUser;
 import com.idc.modules.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
-import sun.invoke.empty.Empty;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
