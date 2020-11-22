@@ -21,4 +21,6 @@ public interface ISysUserService extends IService<SysUser> {
      * @return
      */
     SysUser loginByUserName(String userName, String passWord);
+
+    void updateLastLoginTime(int id);
 }

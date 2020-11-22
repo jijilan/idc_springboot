@@ -18,5 +18,7 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 
     SysUser loginByUserName(@Param("userName") String userName, @Param("passWord") String passWord);
 
+    void updateLastLoginTime(@Param("id") int id);
+
 
 }

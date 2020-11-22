@@ -31,4 +31,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     public SysUser loginByUserName(String userAccount, String userPassword) {
         return baseMapper.loginByUserName(userAccount,userPassword);
     }
+    @Override
+    public void updateLastLoginTime(int id){
+         baseMapper.updateLastLoginTime(id);
+    }
+
 }
