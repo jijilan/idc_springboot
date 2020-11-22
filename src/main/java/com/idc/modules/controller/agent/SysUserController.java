@@ -116,7 +116,7 @@ public class SysUserController  extends BaseController {
     @PostMapping(value = "/phoneRegist")
     public ResultView regist(@NotBlank(message = "手机号不能为空") @Length(min = 11, max = 11, message = "手机号长度必须为11位") String phoneNum,
                             @NotBlank(message = "验证码不能为空")
-                            @Length(min = 6, max = 6, message = "验证码长度必须为6位") String verCode,@NotBlank(message = "密码不能为空") String passWord) {
+                            @Length(min = 6, max = 6, message = "验证码长度必须为6位") String verCode,@NotBlank(message = "密码不能为空") String passWord,@NotBlank(message = "品牌类型不能为空") String companyType) {
         // 验证手机号是否合法
         if(!IdentityUtil.isMobileNO(phoneNum)){
             return ResultView.error("手机号不合法!");
@@ -126,9 +126,13 @@ public class SysUserController  extends BaseController {
         if(EmptyUtil.isEmpty(phoneCode) || !verCode.equals(phoneCode)){
             return ResultView.error("手机验证码错误!");
         }
+        if(!"1".equals(companyType) && !"2".equals(companyType)){
+            return ResultView.error("品牌类型错误!");
+        }
         SysUser sysUser=new SysUser();
         sysUser.setUserName(phoneNum);
         sysUser.setPhoneNum(phoneNum);
+        sysUser.setCType(Integer.parseInt(companyType));
         sysUser.setPassWord(MD5Util.endCode(passWord));
         boolean saveUser=iSysUserService.save(sysUser);
         // 将数据重新查出来获取id
