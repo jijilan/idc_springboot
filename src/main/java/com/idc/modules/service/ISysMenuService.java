@@ -77,7 +77,7 @@ public interface ISysMenuService extends IService<SysMenu> {
     /**
      * @Description 获取管理员的接口权限集合
      * @Date 2020/8/20 20:32
-     * @Author liangshihao
+     * @Author jijl
      */
     List<String> getAuthoritysByManager(String managerId);
 }

@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
- * @Auther: liangshihao
+ * @Auther: jijl
  * @Date: 2020/9/18 12:08
  * @Description: Excle 文件导入导出Util(easypoi)
  */
@@ -38,7 +38,7 @@ public class ExcelUtil {
      * @param fileName
      * @param response
      * @return
-     * @author liangshihao
+     * @author jijl
      * @date 2020/9/18 13:07
      */
     public static void exportExcel(List<?> list, String title, String sheetName, Class<?> pojoClass, String fileName, boolean isCreateHeader, HttpServletResponse response) {
@@ -58,7 +58,7 @@ public class ExcelUtil {
      * @param fileName
      * @param response
      * @return
-     * @author liangshihao
+     * @author jijl
      * @date 2020/9/18 13:07
      */
     public static void exportExcel(List<?> list, String title, String sheetName, Class<?> pojoClass, String fileName, HttpServletResponse response) {
@@ -72,7 +72,7 @@ public class ExcelUtil {
      * @param fileName 导出的文件名称
      * @param response
      * @return
-     * @author liangshihao
+     * @author jijl
      * @date 2020/9/18 16:14
      */
     public static void exportExcel(List<Map<String, Object>> list, String fileName, HttpServletResponse response) {
@@ -88,7 +88,7 @@ public class ExcelUtil {
      * @param exportParams ExportParams封装实体
      * @param response
      * @return
-     * @author liangshihao
+     * @author jijl
      * @date 2020/9/18 15:33
      */
     private static void defaultExport(List<?> list, Class<?> pojoClass, String fileName, HttpServletResponse response, ExportParams exportParams) {
@@ -105,7 +105,7 @@ public class ExcelUtil {
      * @param response
      * @param workbook Excel对象
      * @return
-     * @author liangshihao
+     * @author jijl
      * @date 2020/9/18 15:35
      */
     private static void downLoadExcel(String fileName, HttpServletResponse response, Workbook workbook) {
@@ -126,7 +126,7 @@ public class ExcelUtil {
      * @param fileName 导出的文件名
      * @param response
      * @return
-     * @author liangshihao
+     * @author jijl
      * @date 2020/9/18 15:33
      */
     private static void defaultExport(List<Map<String, Object>> list, String fileName, HttpServletResponse response) {
@@ -144,7 +144,7 @@ public class ExcelUtil {
      * @param headerRows 表头行数
      * @param pojoClass  Excel实体类
      * @return
-     * @author liangshihao
+     * @author jijl
      * @date 2020/9/18 14:17
      */
     public static <T> List<T> importExcel(String filePath, Integer titleRows, Integer headerRows, Class<T> pojoClass) {
@@ -175,7 +175,7 @@ public class ExcelUtil {
      * @param headerRows 表头行数
      * @param pojoClass  Excel实体类
      * @return
-     * @author liangshihao
+     * @author jijl
      * @date 2020/9/18 14:17
      */
     public static <T> List<T> importExcel(MultipartFile file, Integer titleRows, Integer headerRows, Class<T> pojoClass) {
