@@ -17,6 +17,10 @@ public enum DictionaryEnum {
     ISFLAG_Y(1, "有效/正常"),
     ISFLAG_N(2, "无效/禁用"),
 
+    USER_ISFLAG_Y(0, "有效/正常"),
+    USER_ISFLAG_N(1, "无效/禁用"),
+
+
     IS_DEL_N(1, "未删除"),
     IS_DEL_Y(2, "已删除"),
 

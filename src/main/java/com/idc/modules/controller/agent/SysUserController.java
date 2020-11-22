@@ -54,6 +54,7 @@ public class SysUserController  extends BaseController {
     @Autowired
     private RedisService redisService;
 
+
     /**
      * 登录接口
      * @param userName

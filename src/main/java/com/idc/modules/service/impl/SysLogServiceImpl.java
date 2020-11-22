@@ -63,9 +63,13 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         } else {
             sysManager = (SysManager) request.getAttribute(SysConstant.MANAGER);
         }
-        sysLog_.setUsername(sysManager.getUserAcount());
-        //保存系统日志
-        save(sysLog_);
+        if(sysManager!=null){
+            sysLog_.setUsername(sysManager.getUserAcount());
+            //保存系统日志
+            save(sysLog_);
+        }
+
+
     }
 
     @Override
