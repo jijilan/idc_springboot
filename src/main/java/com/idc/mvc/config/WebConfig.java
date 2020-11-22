@@ -4,6 +4,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.idc.common.utils.DateUtils;
+import com.idc.mvc.handler.FrontAuthorizationInterceptor;
 import com.idc.mvc.resources.WebResource;
 import com.idc.mvc.handler.BackAuthenticationInterceptor;
 import com.idc.mvc.handler.BackAuthorizationInterceptor;
@@ -51,7 +52,12 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         log.info("授权拦截路径加载成功:{}", interceptorResource.getAdminAuthenticationAddPathPatterns());
-
+        // 前端拦截器
+        registry.addInterceptor(frontAuthorizationInterceptor())
+                .addPathPatterns(interceptorResource.getFrontAuthenticationAddPathPatterns())
+                .excludePathPatterns(interceptorResource.getFrontAuthenticationExcludePathPatterns());
+        
+        // 后台拦截器
         registry.addInterceptor(backAuthenticationInterceptor())
                 .addPathPatterns(interceptorResource.getAdminAuthenticationAddPathPatterns())
                 .excludePathPatterns(interceptorResource.getAdminAuthenticationExcludePathPatterns());
@@ -190,6 +196,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Bean
     BackAuthorizationInterceptor backAuthorizationInterceptor() {
         return new BackAuthorizationInterceptor();
+    }
+
+    @Bean
+    FrontAuthorizationInterceptor frontAuthorizationInterceptor(){
+        return new FrontAuthorizationInterceptor();
     }
 
 
