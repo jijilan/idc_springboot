@@ -2,6 +2,7 @@ package com.idc.modules.controller.agent;
 
 
 import com.alibaba.druid.support.json.JSONUtils;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.idc.common.annotation.log.SysLog;
@@ -80,7 +81,7 @@ public class SysUserController  extends BaseController {
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
             resMap.put("token",token);
-            resMap.put("user", JSONUtils.toJSONString(sysUser));
+            resMap.put("user", JSON.toJSON(sysUser));
             return ResultView.ok(resMap);
         }
         return ResultView.error("账号密码错误");
@@ -104,7 +105,7 @@ public class SysUserController  extends BaseController {
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
             resMap.put("token",token);
-            resMap.put("user", JSONUtils.toJSONString(sysUser));
+            resMap.put("user", JSON.toJSON(sysUser));
             return ResultView.ok(resMap);
         }
         return ResultView.error("账号密码错误");
