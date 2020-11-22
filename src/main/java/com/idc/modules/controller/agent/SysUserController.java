@@ -145,7 +145,10 @@ public class SysUserController  extends BaseController {
         sysUser=iSysUserService.getOne(qw);
         if (saveUser) {
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
-            return ResultView.ok("注册成功",token);
+            Map resMap=new HashMap();
+            resMap.put("token",token);
+            resMap.put("user", JSON.toJSON(sysUser));
+            return ResultView.ok(resMap);
         }
         return ResultView.error("注册失败");
     }
