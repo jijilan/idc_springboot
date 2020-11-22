@@ -76,8 +76,9 @@ public class SysUserController  extends BaseController {
         }
         password=MD5Util.endCode(password);
         SysUser sysUser = iSysUserService.loginByUserName(userName,password);
-        sysUser.setPassWord("");
+
         if (EmptyUtil.isNotEmpty(sysUser)) {
+            sysUser.setPassWord("");
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
             resMap.put("token",token);
