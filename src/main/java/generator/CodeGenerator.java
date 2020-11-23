@@ -121,7 +121,7 @@ public class CodeGenerator {
         strategy.setEntityLombokModel(true);
         strategy.setRestControllerStyle(true);
 //        strategy.setTablePrefix("sys_user");
-        strategy.setInclude("company_type");
+        strategy.setInclude("brand_dictionary");
         strategy.setControllerMappingHyphenStyle(true);
         mpg.setStrategy(strategy);
         mpg.setTemplateEngine(new FreemarkerTemplateEngine());
