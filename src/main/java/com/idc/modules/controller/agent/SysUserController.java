@@ -33,7 +33,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,14 +76,12 @@ public class SysUserController  extends BaseController {
         }
         password=MD5Util.endCode(password);
         SysUser sysUser = iSysUserService.loginByUserName(userName,password);
-        sysUser.setPassWord("");
+
         if (EmptyUtil.isNotEmpty(sysUser)) {
-            // 更新最后登录时间
-            iSysUserService.updateLastLoginTime(sysUser.getId());
+            sysUser.setPassWord("");
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
             resMap.put("token",token);
-
             resMap.put("user", JSON.toJSON(sysUser));
             return ResultView.ok(resMap);
         }
@@ -106,8 +103,6 @@ public class SysUserController  extends BaseController {
         SysUser sysUser = iSysUserService.getOne(qw);
         sysUser.setPassWord("");
         if (EmptyUtil.isNotEmpty(sysUser)) {
-            // 更新最后登录时间
-            iSysUserService.updateLastLoginTime(sysUser.getId());
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
             resMap.put("token",token);
@@ -150,7 +145,10 @@ public class SysUserController  extends BaseController {
         sysUser=iSysUserService.getOne(qw);
         if (saveUser) {
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
-            return ResultView.ok("注册成功",token);
+            Map resMap=new HashMap();
+            resMap.put("token",token);
+            resMap.put("user", JSON.toJSON(sysUser));
+            return ResultView.ok(resMap);
         }
         return ResultView.error("注册失败");
     }
