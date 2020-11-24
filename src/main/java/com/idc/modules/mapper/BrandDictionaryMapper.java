@@ -16,5 +16,6 @@ import java.util.Map;
  * @since 2020-11-23
  */
 public interface BrandDictionaryMapper extends BaseMapper<BrandDictionary> {
-    List<Map> getNoSonDicStruct(@Param("pCode") String pCode);
+    List<Map> getNoSonDicStruct(@Param("pCode") String pCode,@Param("findParent") String findParent);
+    List<Map> getSonDicByPCode(@Param("pCode") String pCode);
 }

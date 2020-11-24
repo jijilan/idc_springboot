@@ -8,6 +8,15 @@
     </sql>
     <!-- 获取没有儿子的数据列表-->
     <select id="getNoSonDicStruct" resultType="java.util.Map">
-        select code,name from brand_dictionary where p_code=#{pCode} and code not in (select p_code from brand_dictionary where code like '%${pCode}%')
+        select code,name from brand_dictionary where p_code=#{pCode}
+        and code
+        <if test="findParent != null and findParent !=''">
+        not
+        </if>
+        in (select p_code from brand_dictionary where code like '%${pCode}%')
+    </select>
+    <!--根据祖宗编码获取所有子级-->
+    <select id="getSonDicByPCode" resultType="java.util.Map">
+       select code,name,p_code from brand_dictionary where p_code like '${pCode}%' and length(code)=5
     </select>
 </mapper>

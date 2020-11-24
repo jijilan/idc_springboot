@@ -20,7 +20,11 @@ import java.util.Map;
 @Service
 public class BrandDictionaryServiceImpl extends ServiceImpl<BrandDictionaryMapper, BrandDictionary> implements IBrandDictionaryService {
     @Override
-    public List<Map> getNoSonDicStruct(String pCode){
-        return baseMapper.getNoSonDicStruct(pCode);
+    public List<Map> getNoSonDicStruct(String pCode,String findParent){
+        return baseMapper.getNoSonDicStruct(pCode,findParent);
+    }
+    @Override
+    public List<Map> getSonDicByPCode(String pCode){
+        return baseMapper.getSonDicByPCode(pCode);
     }
 }

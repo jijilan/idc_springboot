@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,12 +50,30 @@ public class BrandDictionaryController {
      * @return
      */
     @PostMapping(value = "/getBrandDicStruct")
-    public ResultView getBrandDicStruct(String pCode) {
+    public ResultView getBrandDicStruct(@NotBlank(message = "请输入父级编码")String pCode) {
         Map resMap=new HashMap();
-        // 1.先获取没有子级的数据
-        resMap.put("noChildList",iBrandDictionaryService.getNoSonDicStruct(pCode));
-        // 2.有子级的数据
-        return ResultView.ok("查询成功",iBrandDictionaryService.getNoSonDicStruct(pCode));
+        /** 1.没有子级的数据 **/
+        resMap.put("noChildList",iBrandDictionaryService.getNoSonDicStruct(pCode,"noSon"));
+        /** 2.有子级的数据 **/
+        // a.获取全部父级的数据
+        List<Map> parentList=iBrandDictionaryService.getNoSonDicStruct(pCode,"");
+        // b.获取全部子级的数据
+        List<Map> childList=iBrandDictionaryService.getSonDicByPCode(pCode);
+        for(int m=0;m<parentList.size();m++){
+            Map thatParentMap=parentList.get(m);
+            List<Map> thatChilds=new ArrayList<>();
+            String thatCode=thatParentMap.get("code")+"";
+            for(int n=0;n<childList.size();n++){
+                Map thatChildMap=childList.get(n);
+                if(thatCode.equals(thatChildMap.get("p_code")+"")){
+                    thatChilds.add(thatChildMap);
+                }
+            }
+            thatParentMap.put("childs",thatChilds);
+            parentList.set(m,thatParentMap);
+        }
+        resMap.put("childList",parentList);
+        return ResultView.ok("查询成功",resMap);
     }
 
 
