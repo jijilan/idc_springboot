@@ -2,6 +2,7 @@ package com.idc.modules.mapper;
 
 import com.idc.modules.entity.BrandBasicInfor;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Insert;
 
 /**
  * <p>
@@ -12,5 +13,4 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2020-11-27
  */
 public interface BrandBasicInforMapper extends BaseMapper<BrandBasicInfor> {
-
 }

@@ -23,7 +23,10 @@ import lombok.experimental.Accessors;
 public class BrandUserRole extends Model<BrandUserRole> {
 
     private static final long serialVersionUID = 1L;
-
+    public BrandUserRole(){
+        addTime=new Date();
+        isDel=0;
+    }
     /**
      * 自增id
      */

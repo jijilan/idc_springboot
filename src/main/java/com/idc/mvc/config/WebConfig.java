@@ -53,9 +53,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         log.info("授权拦截路径加载成功:{}", interceptorResource.getAdminAuthenticationAddPathPatterns());
         // 前端拦截器
-        registry.addInterceptor(frontAuthorizationInterceptor())
-                .addPathPatterns(interceptorResource.getFrontAuthenticationAddPathPatterns())
-                .excludePathPatterns(interceptorResource.getFrontAuthenticationExcludePathPatterns());
+//        registry.addInterceptor(frontAuthorizationInterceptor())
+//                .addPathPatterns(interceptorResource.getFrontAuthenticationAddPathPatterns())
+//                .excludePathPatterns(interceptorResource.getFrontAuthenticationExcludePathPatterns());
 
         // 后台拦截器
         registry.addInterceptor(backAuthenticationInterceptor())
