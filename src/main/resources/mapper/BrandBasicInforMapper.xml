@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.idc.modules.mapper.BrandBasicInforMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, c_type, brand_name, zhucezijin, zhucesjzijin, gongsixz, pinpaidz, chanpscdz, zhuycp, cailliaolb, cailiaolb_json, chanpmc, pinplogo, chuanzhm, dailppzzsmc, pinpyyzz, pinpzzjgdmz, pinpswdjz, pinpsanzyyzz, pinpsannwszm, add_time, update_time
+    </sql>
+
+</mapper>

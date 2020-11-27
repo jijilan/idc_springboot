@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.idc.modules.mapper.BrandPersonMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, brand_id, p_type, p_name, p_post, p_idcard, p_social_code, p_phone_num, p_mail_box, add_time
+    </sql>
+
+</mapper>
