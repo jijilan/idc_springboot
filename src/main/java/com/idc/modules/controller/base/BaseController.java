@@ -2,6 +2,7 @@ package com.idc.modules.controller.base;
 
 import com.idc.common.redis.RedisService;
 import com.idc.common.utils.JwtUtil;
+import com.idc.modules.service.IBrandUserRoleService;
 import com.idc.mvc.resources.WebResource;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,6 +17,8 @@ public class BaseController {
     protected RedisService redisService;
     @Autowired
     protected WebResource webResource;
+    @Autowired
+    protected IBrandUserRoleService iBrandUserRoleService;
 
     /**
      * 生成token

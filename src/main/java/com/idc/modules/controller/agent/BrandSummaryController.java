@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.idc.common.result.ResultView;
+import com.idc.common.result.SysConstant;
 import com.idc.common.utils.EmptyUtil;
+import com.idc.modules.controller.base.BaseController;
 import com.idc.modules.entity.*;
 import com.idc.modules.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +39,7 @@ import java.util.Map;
 @RestController("BrandSummary")
 @RequestMapping("/api/brand-summary/agent")
 @Validated
-public class BrandSummaryController {
+public class BrandSummaryController extends BaseController {
     @Autowired
     private IBrandDictionaryService iBrandDictionaryService;
     @Autowired
@@ -50,7 +53,14 @@ public class BrandSummaryController {
 
     // 保存品牌基础信息: 基础信息+产品信息
     @PostMapping(value = "/saveBrandSummary")
-    public ResultView saveBrandSummary(@RequestBody JSONObject jsonParam) {
+    public ResultView saveBrandSummary(@RequestBody JSONObject jsonParam,HttpServletRequest request) {
+        int userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
+        QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
+        brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId).eq(BrandUserRole::getCType,"1");
+        BrandUserRole brandUserRole=iBrandUserRoleService.getOne(brandUserRoleQueryWrapper);
+        if(EmptyUtil.isEmpty(brandUserRole)){
+            return ResultView.error(23,"基础信息为空!");
+        }
         String brandSummaryStr=jsonParam.getString("brandSummary");
         String summaryApplyStr=jsonParam.getString("summaryApplys");
         String summaryProductStr=jsonParam.getString("summaryProducts");
@@ -76,8 +86,11 @@ public class BrandSummaryController {
         if (!"true".equals(checkMap.get("status") + "")) {
             return  ResultView.error(checkMap.get("memo") + "");
         }
+        // 设置当前操作人品牌id为此品牌id
+        brandSummary.setBrandId(brandUserRole.getBrandId());
         // 判断传入的id是否为空
         if(EmptyUtil.isEmpty(brandSummary.getId())){
+
             // 调用保存接口
             iBrandSummaryService.save(brandSummary);
         }else{
@@ -111,11 +124,22 @@ public class BrandSummaryController {
     }
 
     @PostMapping(value = "/getProductListByBrandId")
-    public ResultView getProductListByBrandId(@NotNull(message = "品牌id不能为空") int brandId) {
+    public ResultView getProductListByBrandId(HttpServletRequest request) {
+        int userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
+        QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
+        // 获取当前用户品牌id
+        brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId).eq(BrandUserRole::getCType,"1");
+        BrandUserRole brandUserRole=iBrandUserRoleService.getOne(brandUserRoleQueryWrapper);
+        if(EmptyUtil.isEmpty(brandUserRole)){
+            return ResultView.error(23,"基础信息为空!");
+        }
         // 1.获取品牌信息中配置的产品
         QueryWrapper<BrandBasicInfor> basWrapper=new QueryWrapper<>();
-        basWrapper.lambda().eq(BrandBasicInfor::getId,brandId);
+        basWrapper.lambda().eq(BrandBasicInfor::getId,brandUserRole.getBrandId());
         BrandBasicInfor basicInfor=iBrandBasicInforService.getOne(basWrapper);
+        if(EmptyUtil.isEmpty(basicInfor)){
+            return ResultView.error(23,"基础信息为空!");
+        }
         QueryWrapper<BrandDictionary> proWrapper=new QueryWrapper<>();
         proWrapper.lambda().in(BrandDictionary::getCode,basicInfor.getCailliaolb().split(",")).orderByDesc(BrandDictionary::getBySort);
         List<Map<String,Object>> productInforList= iBrandDictionaryService.listMaps(proWrapper.lambda().select(BrandDictionary::getCode,BrandDictionary::getName,BrandDictionary::getRemark));
@@ -125,10 +149,17 @@ public class BrandSummaryController {
         return ResultView.ok(productInforList);
     }
     @PostMapping(value = "/getSummaryByBrandId")
-    public ResultView getSummaryByBrandId(@NotNull(message = "品牌id不能为空") int brandId) {
+    public ResultView getSummaryByBrandId(HttpServletRequest request) {
+        int userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
+        QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
+        brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId).eq(BrandUserRole::getCType,"1");
+        BrandUserRole brandUserRole=iBrandUserRoleService.getOne(brandUserRoleQueryWrapper);
+        if(EmptyUtil.isEmpty(brandUserRole)){
+            return ResultView.error(23,"基础信息为空!");
+        }
         Map resMap=new HashMap();
         // 获取简介基础信息
-        BrandSummary brandSummary=iBrandSummaryService.getById(brandId);
+        BrandSummary brandSummary=iBrandSummaryService.getById(brandUserRole.getBrandId());
         // 获取简介应用列表信息
         QueryWrapper<BrandSummaryApply> applyQueryWrapper=new QueryWrapper<>();
         applyQueryWrapper.lambda().eq(BrandSummaryApply::getSumaryId,brandSummary.getId());
@@ -141,7 +172,7 @@ public class BrandSummaryController {
         resMap.put("brandSummaryApplies",brandSummaryApplies);
         resMap.put("brandSummaryProducts",brandSummaryProducts);
         if(EmptyUtil.isEmpty(brandSummary)){
-            return ResultView.error("简介信息为空!");
+            return ResultView.ok(23,"简介信息为空!",brandUserRole.getBrandId());
         }
         return ResultView.ok(resMap);
     }

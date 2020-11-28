@@ -2,6 +2,11 @@ package com.idc.modules.service;
 
 import com.idc.modules.entity.BrandBasRevPerf;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.idc.modules.entity.BrandSummaryApply;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -12,5 +17,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-11-27
  */
 public interface IBrandBasRevPerfService extends IService<BrandBasRevPerf> {
-
+    Map checkBeanListIsNull(List<BrandBasRevPerf> brandBasRevPerfs,List<String> checkList);
+    List<Map> getBrandBasLicense(List<Integer> brandIds);
 }

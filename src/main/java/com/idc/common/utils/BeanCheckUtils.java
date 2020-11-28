@@ -40,6 +40,14 @@ public class BeanCheckUtils {
         }
         return getResMap(true,"数据正常");
     }
+
+    /**
+     * 只验证指定的字段
+     * @param obj
+     * @param parms
+     * @param checkInfor
+     * @return
+     */
     public static Map<String,Object> checkObjectByParms(Object obj, List<String> parms,Map<String,Object> checkInfor){
         for(Field f : obj.getClass().getDeclaredFields()){
             f.setAccessible(true);

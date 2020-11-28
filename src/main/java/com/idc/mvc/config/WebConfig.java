@@ -62,12 +62,12 @@ public class WebConfig implements WebMvcConfigurer {
             e.printStackTrace();
         }
         log.info("********************当前项目ip:"+IP+"***********************************");
-        if("172.17.30.69".equals(IP)){
+//        if("172.17.30.69".equals(IP)){
             // 前端拦截器
             registry.addInterceptor(frontAuthorizationInterceptor())
                     .addPathPatterns(interceptorResource.getFrontAuthenticationAddPathPatterns())
                     .excludePathPatterns(interceptorResource.getFrontAuthenticationExcludePathPatterns());
-        }
+//        }
 
 
         // 后台拦截器

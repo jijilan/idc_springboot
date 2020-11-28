@@ -45,6 +45,9 @@ public class ResultView implements Serializable {
     public static ResultView error(Integer code, String errMsg) {
         return new ResultView(code, errMsg);
     }
+    public static ResultView ok(Integer code, String msg,Object data) {
+        return new ResultView(code,msg,data);
+    }
 
     public static ResultView error(String errMsg) {
         return new ResultView(errMsg);
