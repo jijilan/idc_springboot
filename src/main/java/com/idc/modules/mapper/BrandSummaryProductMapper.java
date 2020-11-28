@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
  * <p>
- * 品牌 代理商、制造商 简介--相关产品 Mapper 接口
+ * 品牌简介--相关产品 Mapper 接口
  * </p>
  *
  * @author Dylan
- * @since 2020-11-27
+ * @since 2020-11-28
  */
 public interface BrandSummaryProductMapper extends BaseMapper<BrandSummaryProduct> {
 

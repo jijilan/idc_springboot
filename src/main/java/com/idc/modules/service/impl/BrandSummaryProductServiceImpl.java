@@ -28,17 +28,17 @@ public class BrandSummaryProductServiceImpl extends ServiceImpl<BrandSummaryProd
         // 获取检查列表
         checkInfor= BeanCheckUtils.getCheckInfor(new BrandSummaryProduct());
     }
-//    @Override
-//    public Map checkBeanListIsNull(List<BrandSummaryProduct> brandSummaryProducts) {
-//        Map checkMap=new HashMap();
-//        List<String> ignoreList=new ArrayList<>();
-//        ignoreList.add("sumaryId");
-//        for(BrandSummaryApply brandSummaryApply : brandSummaryApplies){
-//            checkMap= BeanCheckUtils.checkObject(brandSummaryApply,ignoreList,checkInfor);
-//            if (!"true".equals(checkMap.get("status") + "")) {
-//                return  checkMap;
-//            }
-//        }
-//        return checkMap;
-//    }
+    @Override
+    public Map checkBeanListIsNull(List<BrandSummaryProduct> brandSummaryProducts) {
+        Map checkMap=new HashMap();
+        List<String> ignoreList=new ArrayList<>();
+        ignoreList.add("sumaryId");
+        for(BrandSummaryProduct brandSummaryProduct : brandSummaryProducts){
+            checkMap= BeanCheckUtils.checkObject(brandSummaryProduct,ignoreList,checkInfor);
+            if (!"true".equals(checkMap.get("status") + "")) {
+                return  checkMap;
+            }
+        }
+        return checkMap;
+    }
 }

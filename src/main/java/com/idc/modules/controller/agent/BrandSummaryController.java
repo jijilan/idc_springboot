@@ -7,10 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.idc.common.result.ResultView;
 import com.idc.common.utils.EmptyUtil;
 import com.idc.modules.entity.*;
-import com.idc.modules.service.IBrandBasicInforService;
-import com.idc.modules.service.IBrandDictionaryService;
-import com.idc.modules.service.IBrandSummaryProductService;
-import com.idc.modules.service.IBrandSummaryService;
+import com.idc.modules.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -45,16 +42,17 @@ public class BrandSummaryController {
     @Autowired
     private IBrandSummaryService iBrandSummaryService;
     @Autowired
+    private IBrandSummaryApplyService iBrandSummaryApplyService;
+    @Autowired
     private IBrandSummaryProductService iBrandSummaryProductService;
 
     // 保存品牌基础信息: 基础信息+产品信息
     @PostMapping(value = "/saveBrandSummary")
     public ResultView saveBrandSummary(@RequestBody JSONObject jsonParam) {
         String brandSummaryStr=jsonParam.getString("brandSummary");
-        String summaryApplyStr=jsonParam.getString("summaryApplyS");
-        String summaryProductStr=jsonParam.getString("summaryProduct");
-        String brandIdStr=jsonParam.getString("brandId");
-        if(EmptyUtil.isEmpty(brandSummaryStr)||EmptyUtil.isEmpty(summaryApplyStr)||EmptyUtil.isEmpty(summaryProductStr)||EmptyUtil.isEmpty(brandIdStr)){
+        String summaryApplyStr=jsonParam.getString("summaryApplys");
+        String summaryProductStr=jsonParam.getString("summaryProducts");
+        if(EmptyUtil.isEmpty(brandSummaryStr)||EmptyUtil.isEmpty(summaryApplyStr)||EmptyUtil.isEmpty(summaryProductStr)){
             return  ResultView.error("必要信息不能为空!");
         }
         // 1.简介信息-主表数据
@@ -66,10 +64,35 @@ public class BrandSummaryController {
         }
         // 2.简介信息-相关产品信息
         List<BrandSummaryApply> brandSummaryApplies=JSON.parseArray(summaryApplyStr,BrandSummaryApply.class);
-
+        checkMap=iBrandSummaryApplyService.checkBeanListIsNull(brandSummaryApplies);
+        if (!"true".equals(checkMap.get("status") + "")) {
+            return  ResultView.error(checkMap.get("memo") + "");
+        }
         // 3.简介信息-产品应用情况
+        List<BrandSummaryProduct> brandSummaryProducts=JSON.parseArray(summaryProductStr,BrandSummaryProduct.class);
+        checkMap=iBrandSummaryProductService.checkBeanListIsNull(brandSummaryProducts);
+        if (!"true".equals(checkMap.get("status") + "")) {
+            return  ResultView.error(checkMap.get("memo") + "");
+        }
+        Boolean saveBas= iBrandSummaryService.save(brandSummary);
+        if(saveBas){
+            for(int i=0;i<brandSummaryApplies.size();i++){
+                brandSummaryApplies.set(i,brandSummaryApplies.get(i).setSumaryId(brandSummary.getId()));
+            }
+            //插入人员信息
+            Boolean saveApp= iBrandSummaryApplyService.saveBatch(brandSummaryApplies);
+            if(saveApp){
+                for(int i=0;i<brandSummaryProducts.size();i++){
+                    brandSummaryProducts.set(i,brandSummaryProducts.get(i).setSumaryId(brandSummary.getId()));
+                }
+                Boolean savePro=iBrandSummaryProductService.saveBatch(brandSummaryProducts);
+                if(savePro){
+                    return ResultView.ok(brandSummary.getId());
+                }
+            }
 
-        return ResultView.ok();
+        }
+        return ResultView.error("保存失败!");
     }
 
     @PostMapping(value = "/getProductListByBrandId")

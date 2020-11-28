@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -34,26 +36,31 @@ public class BrandSummaryApply extends Model<BrandSummaryApply> {
     /**
      * 简介id
      */
+    @JsonProperty("简介id")
     private Integer sumaryId;
 
     /**
      * 项目名称
      */
+    @JsonProperty("项目名称")
     private String xmmc;
 
     /**
      * 使用时间
      */
+    @JsonProperty("使用时间")
     private String sysj;
 
     /**
      * 产品序列型号
      */
+    @JsonProperty("产品序列型号")
     private String cpxlxh;
 
     /**
      * 合同金额
      */
+    @JsonProperty("合同金额")
     private BigDecimal htprice;
 
     /**
