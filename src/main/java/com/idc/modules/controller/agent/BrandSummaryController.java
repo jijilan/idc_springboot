@@ -4,6 +4,7 @@ package com.idc.modules.controller.agent;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.idc.common.result.ResultView;
 import com.idc.common.utils.EmptyUtil;
 import com.idc.modules.entity.*;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -74,24 +76,37 @@ public class BrandSummaryController {
         if (!"true".equals(checkMap.get("status") + "")) {
             return  ResultView.error(checkMap.get("memo") + "");
         }
-        Boolean saveBas= iBrandSummaryService.save(brandSummary);
-        if(saveBas){
-            for(int i=0;i<brandSummaryApplies.size();i++){
-                brandSummaryApplies.set(i,brandSummaryApplies.get(i).setSumaryId(brandSummary.getId()));
-            }
-            //插入人员信息
-            Boolean saveApp= iBrandSummaryApplyService.saveBatch(brandSummaryApplies);
-            if(saveApp){
-                for(int i=0;i<brandSummaryProducts.size();i++){
-                    brandSummaryProducts.set(i,brandSummaryProducts.get(i).setSumaryId(brandSummary.getId()));
-                }
-                Boolean savePro=iBrandSummaryProductService.saveBatch(brandSummaryProducts);
-                if(savePro){
-                    return ResultView.ok(brandSummary.getId());
-                }
-            }
-
+        // 判断传入的id是否为空
+        if(EmptyUtil.isEmpty(brandSummary.getId())){
+            // 调用保存接口
+            iBrandSummaryService.save(brandSummary);
+        }else{
+            //调用修改的方法
+            iBrandSummaryService.updateById(brandSummary);
+            // 后面的列表数据直接删掉之后重新新增
+            // 删除应用数据
+            UpdateWrapper<BrandSummaryApply> applyUpdateWrapper = new UpdateWrapper();
+            applyUpdateWrapper.lambda().eq(BrandSummaryApply::getSumaryId,brandSummary.getId());
+            iBrandSummaryApplyService.remove(applyUpdateWrapper);
+            // 删除产品数据
+            UpdateWrapper<BrandSummaryProduct> productUpdateWrapper = new UpdateWrapper();
+            productUpdateWrapper.lambda().eq(BrandSummaryProduct::getSumaryId,brandSummary.getId());
+            iBrandSummaryProductService.remove(productUpdateWrapper);
         }
+        // 保存其他两个表的数据
+        for(int i=0;i<brandSummaryApplies.size();i++){
+            brandSummaryApplies.set(i,brandSummaryApplies.get(i).setSumaryId(brandSummary.getId()));
+        }
+        //插入人员信息
+        iBrandSummaryApplyService.saveBatch(brandSummaryApplies);
+        for(int i=0;i<brandSummaryProducts.size();i++){
+            brandSummaryProducts.set(i,brandSummaryProducts.get(i).setSumaryId(brandSummary.getId()));
+        }
+        Boolean savePro=iBrandSummaryProductService.saveBatch(brandSummaryProducts);
+        if(savePro){
+            return ResultView.ok(brandSummary.getId());
+        }
+
         return ResultView.error("保存失败!");
     }
 
@@ -109,6 +124,28 @@ public class BrandSummaryController {
         }
         return ResultView.ok(productInforList);
     }
+    @PostMapping(value = "/getSummaryByBrandId")
+    public ResultView getSummaryByBrandId(@NotNull(message = "品牌id不能为空") int brandId) {
+        Map resMap=new HashMap();
+        // 获取简介基础信息
+        BrandSummary brandSummary=iBrandSummaryService.getById(brandId);
+        // 获取简介应用列表信息
+        QueryWrapper<BrandSummaryApply> applyQueryWrapper=new QueryWrapper<>();
+        applyQueryWrapper.lambda().eq(BrandSummaryApply::getSumaryId,brandSummary.getId());
+        List<BrandSummaryApply> brandSummaryApplies=iBrandSummaryApplyService.list(applyQueryWrapper);
+        // 获取产品列表信息
+        QueryWrapper<BrandSummaryProduct> productQueryWrapper=new QueryWrapper<>();
+        productQueryWrapper.lambda().eq(BrandSummaryProduct::getSumaryId,brandSummary.getId());
+        List<BrandSummaryProduct> brandSummaryProducts=iBrandSummaryProductService.list(productQueryWrapper);
+        resMap.put("brandSummary",brandSummary);
+        resMap.put("brandSummaryApplies",brandSummaryApplies);
+        resMap.put("brandSummaryProducts",brandSummaryProducts);
+        if(EmptyUtil.isEmpty(brandSummary)){
+            return ResultView.error("简介信息为空!");
+        }
+        return ResultView.ok(resMap);
+    }
+
 
 
 
