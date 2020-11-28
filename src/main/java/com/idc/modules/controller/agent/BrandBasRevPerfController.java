@@ -4,6 +4,7 @@ package com.idc.modules.controller.agent;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.idc.common.result.ResultView;
 import com.idc.common.result.SysConstant;
 import com.idc.common.utils.EmptyUtil;
@@ -47,14 +48,16 @@ public class BrandBasRevPerfController  extends BaseController {
     @Autowired
     private IBrandUserRoleService iBrandUserRoleService;
 
+
     /**
      * 保存公司基本信息证明
      * @param request
      * @return
      */
     @PostMapping(value = "/saveBrandBasLicense")
-    public ResultView saveBrandBasLicense(@NotNull(message = "必要信息不能为空") String jsonStr, HttpServletRequest request) {
-        List<BrandBasRevPerf> brandBasRevPerfs= JSON.parseArray(jsonStr, BrandBasRevPerf.class);
+    public ResultView saveBrandBasLicense(@NotNull(message = "品牌商信息不能为空") String jsonStr,String jsonStrBac, HttpServletRequest request) {
+        // 品牌商的数据
+        BrandBasRevPerf brandBasRevPerf= JSON.parseObject(jsonStr, BrandBasRevPerf.class);
         List<String> checkFields=new ArrayList<>();
         checkFields.add("brandId");
         checkFields.add("yingyezz");
@@ -62,16 +65,31 @@ public class BrandBasRevPerfController  extends BaseController {
         checkFields.add("zhuczjsjzm");
         checkFields.add("zuzjgdm");
         checkFields.add("shuiwdjz");
-        Map checkMap= iBrandBasRevPerfService.checkBeanListIsNull(brandBasRevPerfs,checkFields);
+        Map checkMap= iBrandBasRevPerfService.checkBeanIsNull(brandBasRevPerf,checkFields);
         if (!"true".equals(checkMap.get("status") + "")) {
             return  ResultView.error(checkMap.get("memo") + "");
         }
-        if(EmptyUtil.isEmpty(brandBasRevPerfs.get(0).getId())){
+        if(EmptyUtil.isEmpty(brandBasRevPerf.getId())){
             // 如果为空,则执行新增操作
-            iBrandBasRevPerfService.saveBatch(brandBasRevPerfs);
+            iBrandBasRevPerfService.save(brandBasRevPerf);
         }else{
             // 执行更新操作
-            iBrandBasRevPerfService.updateBatchById(brandBasRevPerfs);
+            iBrandBasRevPerfService.updateById(brandBasRevPerf);
+        }
+        if(EmptyUtil.isNotEmpty(jsonStrBac)){
+            // 保存代理商信息
+            checkFields.add("dailssqzmcl");
+            brandBasRevPerf= JSON.parseObject(jsonStrBac, BrandBasRevPerf.class);
+            if (!"true".equals(checkMap.get("status") + "")) {
+                return  ResultView.error(checkMap.get("memo") + "");
+            }
+            if(EmptyUtil.isEmpty(brandBasRevPerf.getId())){
+                // 如果为空,则执行新增操作
+                iBrandBasRevPerfService.save(brandBasRevPerf);
+            }else{
+                // 执行更新操作
+                iBrandBasRevPerfService.updateById(brandBasRevPerf);
+            }
         }
         return  ResultView.ok("操作成功!");
     }
@@ -82,7 +100,7 @@ public class BrandBasRevPerfController  extends BaseController {
      */
     @PostMapping(value = "/getBrandBasLicense")
     public ResultView getBrandBasLicense(HttpServletRequest request) {
-        int userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
+        userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
         QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
         brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId);
         List<BrandUserRole> userBrands= iBrandUserRoleService.list(brandUserRoleQueryWrapper);
@@ -96,6 +114,30 @@ public class BrandBasRevPerfController  extends BaseController {
         }
         return  ResultView.ok(brandLicens);
     }
+
+    @PostMapping(value = "/saveBrandRevenue")
+    public ResultView saveBrandRevenue(@NotNull(message = "必要信息不能为空") String jsonStr,String jsonStrBac, HttpServletRequest request) {
+        // 制造商商的数据
+        BrandBasRevPerf brandBasRevPerf= JSON.parseObject(jsonStr, BrandBasRevPerf.class);
+        UpdateWrapper<BrandBasRevPerf> updateWrapper=new UpdateWrapper<>();
+        updateWrapper.lambda().set(BrandBasRevPerf::getYingycwbbOne,brandBasRevPerf.getYingycwbbOne()).set(BrandBasRevPerf::getYingysrOne,brandBasRevPerf.getYingysrOne())
+                .set(BrandBasRevPerf::getYingycwbbTwo,brandBasRevPerf.getYingycwbbTwo()).set(BrandBasRevPerf::getYingysrTwo,brandBasRevPerf.getYingysrTwo())
+                .set(BrandBasRevPerf::getYingycwbbThree,brandBasRevPerf.getYingycwbbThree()).set(BrandBasRevPerf::getYingysrThree,brandBasRevPerf.getYingysrThree())
+        .eq(BrandBasRevPerf::getId,brandBasRevPerf.getId());
+        iBrandBasRevPerfService.update(brandBasRevPerf,updateWrapper);
+        if(EmptyUtil.isNotEmpty(jsonStrBac)){
+            // 代理商信息
+            brandBasRevPerf=JSON.parseObject(jsonStrBac, BrandBasRevPerf.class);
+            iBrandBasRevPerfService.update(brandBasRevPerf,updateWrapper);
+        }
+        return  ResultView.error("操作失败");
+    }
+    @PostMapping(value = "/getBrandRevenue")
+    public ResultView getBrandRevenue(HttpServletRequest request) {
+        userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
+        return  ResultView.error("操作失败");
+    }
+
 
 
 }

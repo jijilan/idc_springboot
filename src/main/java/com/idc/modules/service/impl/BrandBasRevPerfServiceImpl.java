@@ -41,6 +41,16 @@ public class BrandBasRevPerfServiceImpl extends ServiceImpl<BrandBasRevPerfMappe
     }
 
     @Override
+    public Map checkBeanIsNull(BrandBasRevPerf brandBasRevPerf, List<String> checkList) {
+        Map checkMap=new HashMap();
+        checkMap= BeanCheckUtils.checkObjectByParms(brandBasRevPerf,checkList,checkInfor);
+        if (!"true".equals(checkMap.get("status") + "")) {
+            return  checkMap;
+        }
+        return checkMap;
+    }
+
+    @Override
     public List<Map> getBrandBasLicense(List<Integer> brandIds){
         return baseMapper.getBrandBasLicense(brandIds);
     }

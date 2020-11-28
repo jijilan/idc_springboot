@@ -20,6 +20,9 @@ public class BaseController {
     @Autowired
     protected IBrandUserRoleService iBrandUserRoleService;
 
+    protected int userId;
+
+
     /**
      * 生成token
      *

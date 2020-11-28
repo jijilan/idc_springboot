@@ -18,5 +18,6 @@ import java.util.Map;
  */
 public interface IBrandBasRevPerfService extends IService<BrandBasRevPerf> {
     Map checkBeanListIsNull(List<BrandBasRevPerf> brandBasRevPerfs,List<String> checkList);
+    Map checkBeanIsNull(BrandBasRevPerf brandBasRevPerfs,List<String> checkList);
     List<Map> getBrandBasLicense(List<Integer> brandIds);
 }
