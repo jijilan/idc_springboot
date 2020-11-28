@@ -1,7 +1,10 @@
 package com.idc.modules.service;
 
+import com.idc.modules.entity.BrandBasicInfor;
 import com.idc.modules.entity.BrandSummary;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.Map;
 
 /**
  * <p>
@@ -12,5 +15,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-11-27
  */
 public interface IBrandSummaryService extends IService<BrandSummary> {
-
+    Map checkBeanIsNull(BrandSummary brandSummary);
 }

@@ -1,6 +1,7 @@
 package com.idc.modules.controller.agent;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.idc.common.result.ResultView;
@@ -8,8 +9,11 @@ import com.idc.common.utils.EmptyUtil;
 import com.idc.modules.entity.BrandBasicInfor;
 import com.idc.modules.entity.BrandDictionary;
 import com.idc.modules.entity.BrandPerson;
+import com.idc.modules.entity.BrandSummary;
 import com.idc.modules.service.IBrandBasicInforService;
 import com.idc.modules.service.IBrandDictionaryService;
+import com.idc.modules.service.IBrandSummaryProductService;
+import com.idc.modules.service.IBrandSummaryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -41,13 +45,31 @@ public class BrandSummaryController {
     private IBrandDictionaryService iBrandDictionaryService;
     @Autowired
     private IBrandBasicInforService iBrandBasicInforService;
+    @Autowired
+    private IBrandSummaryService iBrandSummaryService;
+    @Autowired
+    private IBrandSummaryProductService iBrandSummaryProductService;
 
     // 保存品牌基础信息: 基础信息+产品信息
     @PostMapping(value = "/saveBrandSummary")
     public ResultView saveBrandSummary(@RequestBody JSONObject jsonParam) {
-        String brandSummaryStr=jsonParam.getString("basinfor");
-        String summaryProductStr=jsonParam.getString("brandPersons");
+        String brandSummaryStr=jsonParam.getString("brandSummary");
+        String summaryProductStr=jsonParam.getString("brandProduct");
         String brandIdStr=jsonParam.getString("brandId");
+        if(EmptyUtil.isEmpty(brandSummaryStr)||EmptyUtil.isEmpty(summaryProductStr)||EmptyUtil.isEmpty(brandIdStr)){
+            return  ResultView.error("必要信息不能为空!");
+        }
+        // 1.简介信息-主表数据
+        BrandSummary brandSummary= JSON.parseObject(brandSummaryStr,BrandSummary.class);
+        // a.验证基础信息必填字段是否为空
+        Map checkMap= iBrandSummaryService.checkBeanIsNull(brandSummary);
+        if (!"true".equals(checkMap.get("status") + "")) {
+            return  ResultView.error(checkMap.get("memo") + "");
+        }
+        // 2.简介信息-相关产品信息
+
+        // 3.简介信息-产品应用情况
+
         return ResultView.ok();
     }
 

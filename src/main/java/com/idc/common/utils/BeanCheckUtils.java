@@ -40,7 +40,23 @@ public class BeanCheckUtils {
         }
         return getResMap(true,"数据正常");
     }
-
+    public static Map<String,Object> checkObjectByParms(Object obj, List<String> parms,Map<String,Object> checkInfor){
+        for(Field f : obj.getClass().getDeclaredFields()){
+            f.setAccessible(true);
+            try {
+                String propetryName=f.getName();
+                // 只判断指定的字段
+                if(parms.contains(propetryName)){
+                    if(EmptyUtil.isEmpty(f.get(obj))){
+                        return getResMap(false,checkInfor.get(propetryName)+"");
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return getResMap(true,"数据正常");
+    }
     private static Map<String,Object> getResMap(boolean checkStatus, String memo){
         Map<String,Object> resMap=new HashMap<>();
         resMap.put("status",checkStatus);

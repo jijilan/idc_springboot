@@ -91,7 +91,7 @@ public class BrandBasicInforController extends BaseController {
                 brandUserRole.setBrandId(brandBasicInfor.getId());
                 brandUserRole.setCType(brandBasicInfor.getCType());
                 iBrandUserRoleService.save(brandUserRole);
-                return  ResultView.ok();
+                return  ResultView.ok(brandBasicInfor.getId());
             }
         }
         return  ResultView.error("保存数据失败");
