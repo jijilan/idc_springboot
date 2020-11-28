@@ -53,7 +53,8 @@ public class BrandSummaryController extends BaseController {
 
     // 保存品牌基础信息: 基础信息+产品信息
     @PostMapping(value = "/saveBrandSummary")
-    public ResultView saveBrandSummary(@RequestBody JSONObject jsonParam,HttpServletRequest request) {
+    public ResultView saveBrandSummary(String jsonParamStr,HttpServletRequest request) {
+        JSONObject jsonParam = JSONObject.parseObject(jsonParamStr);
         int userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
         QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
         brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId).eq(BrandUserRole::getCType,"1");
