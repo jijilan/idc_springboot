@@ -100,7 +100,8 @@ public class BrandBasicInforController extends BaseController {
     }
 
     @PostMapping(value = "/updateBrandBasicInfor")
-    public ResultView updateBrandBasicInfor(@RequestBody JSONObject jsonParam) {
+    public ResultView updateBrandBasicInfor(String jsonParamStr) {
+        JSONObject jsonParam = JSONObject.parseObject(jsonParamStr);
         String basinforStr = jsonParam.getString("basinfor");
         String brandPersonsStr = jsonParam.getString("brandPersons");
         String userIdStr = jsonParam.getString("userId");
