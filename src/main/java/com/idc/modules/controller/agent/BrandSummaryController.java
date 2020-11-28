@@ -6,10 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.idc.common.result.ResultView;
 import com.idc.common.utils.EmptyUtil;
-import com.idc.modules.entity.BrandBasicInfor;
-import com.idc.modules.entity.BrandDictionary;
-import com.idc.modules.entity.BrandPerson;
-import com.idc.modules.entity.BrandSummary;
+import com.idc.modules.entity.*;
 import com.idc.modules.service.IBrandBasicInforService;
 import com.idc.modules.service.IBrandDictionaryService;
 import com.idc.modules.service.IBrandSummaryProductService;
@@ -54,9 +51,10 @@ public class BrandSummaryController {
     @PostMapping(value = "/saveBrandSummary")
     public ResultView saveBrandSummary(@RequestBody JSONObject jsonParam) {
         String brandSummaryStr=jsonParam.getString("brandSummary");
-        String summaryProductStr=jsonParam.getString("brandProduct");
+        String summaryApplyStr=jsonParam.getString("summaryApplyS");
+        String summaryProductStr=jsonParam.getString("summaryProduct");
         String brandIdStr=jsonParam.getString("brandId");
-        if(EmptyUtil.isEmpty(brandSummaryStr)||EmptyUtil.isEmpty(summaryProductStr)||EmptyUtil.isEmpty(brandIdStr)){
+        if(EmptyUtil.isEmpty(brandSummaryStr)||EmptyUtil.isEmpty(summaryApplyStr)||EmptyUtil.isEmpty(summaryProductStr)||EmptyUtil.isEmpty(brandIdStr)){
             return  ResultView.error("必要信息不能为空!");
         }
         // 1.简介信息-主表数据
@@ -67,6 +65,7 @@ public class BrandSummaryController {
             return  ResultView.error(checkMap.get("memo") + "");
         }
         // 2.简介信息-相关产品信息
+        List<BrandSummaryApply> brandSummaryApplies=JSON.parseArray(summaryApplyStr,BrandSummaryApply.class);
 
         // 3.简介信息-产品应用情况
 

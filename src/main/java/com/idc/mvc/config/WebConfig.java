@@ -22,6 +22,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.*;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,10 +54,21 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         log.info("授权拦截路径加载成功:{}", interceptorResource.getAdminAuthenticationAddPathPatterns());
-        // 前端拦截器
-//        registry.addInterceptor(frontAuthorizationInterceptor())
-//                .addPathPatterns(interceptorResource.getFrontAuthenticationAddPathPatterns())
-//                .excludePathPatterns(interceptorResource.getFrontAuthenticationExcludePathPatterns());
+
+        String IP ="";
+        try {
+            IP = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        log.info("********************当前项目ip:"+IP+"***********************************");
+        if("172.17.30.69".equals(IP)){
+            // 前端拦截器
+            registry.addInterceptor(frontAuthorizationInterceptor())
+                    .addPathPatterns(interceptorResource.getFrontAuthenticationAddPathPatterns())
+                    .excludePathPatterns(interceptorResource.getFrontAuthenticationExcludePathPatterns());
+        }
+
 
         // 后台拦截器
         registry.addInterceptor(backAuthenticationInterceptor())

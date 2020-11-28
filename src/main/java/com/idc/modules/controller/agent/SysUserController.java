@@ -20,6 +20,7 @@ import com.idc.modules.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -74,7 +76,7 @@ public class SysUserController  extends BaseController {
         if(EmptyUtil.isEmpty(imgCode) || !verCode.equals(imgCode)){
             return ResultView.error("验证码错误!");
         }
-        password=MD5Util.endCode(password);
+        password=MD5Util.getMd5Code(password);
         SysUser sysUser = iSysUserService.loginByUserName(userName,password);
 
         if (EmptyUtil.isNotEmpty(sysUser)) {

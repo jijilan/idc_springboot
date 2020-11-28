@@ -1,11 +1,13 @@
 package com.idc.common.utils;
 
+import org.springframework.util.DigestUtils;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +19,6 @@ public class MD5Util {
 		StringBuffer resultSb = new StringBuffer();
 		for (int i = 0; i < b.length; i++)
 			resultSb.append(byteToHexString(b[i]));
-
 		return resultSb.toString();
 	}
 
@@ -38,7 +39,7 @@ public class MD5Util {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			if (charsetname == null || "".equals(charsetname))
 				resultString = byteArrayToHexString(md.digest(resultString
-						.getBytes()));
+						.getBytes("UTF-8")));
 			else
 				resultString = byteArrayToHexString(md.digest(resultString
 						.getBytes(charsetname)));
@@ -55,10 +56,10 @@ public class MD5Util {
 		Key key = null;
 		try {
 			KeyGenerator _generator = KeyGenerator.getInstance("DES");
-			_generator.init(new SecureRandom(strKey.getBytes()));
+			_generator.init(new SecureRandom(strKey.getBytes("UTF-8")));
 			key = _generator.generateKey();
 			_generator = null;
-		} catch (NoSuchAlgorithmException e) {
+		} catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
 		return key;
@@ -71,7 +72,7 @@ public class MD5Util {
 		Key key = getKey(strKey);
 		BASE64Encoder encoder = new BASE64Encoder();
 		try {
-			byteMing = strMing.getBytes("utf-8");
+			byteMing = strMing.getBytes("UTF-8");
 			byteMi = getEncCode(byteMing, key);
 			strMi = encoder.encode(byteMi);
 		} catch (Exception e) {
@@ -97,7 +98,7 @@ public class MD5Util {
 		try {
 			byteMi = base64Decoder.decodeBuffer(strMi);
 			byteMing = getDecCode(byteMi, key);
-			strMing = new String(byteMing, "utf-8");
+			strMing = new String(byteMing, "UTF-8");
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
@@ -156,9 +157,16 @@ public class MD5Util {
 		String encyStr=getDecString(paramData, "!@adsga770a");
 		return encyStr;
 	}
-
+	public static String getMd5Code(String paramData){
+		try {
+			paramData= DigestUtils.md5DigestAsHex((paramData+"!@adsga770a").getBytes("utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return paramData;
+	}
 	public static void main(String[] args) {
-		System.out.println("加密："+endCode("Aa@123456"));
+		System.out.println("加密："+getMd5Code("Aa123456"));
 		System.out.println("解密："+decCode("nfDlLAgAWEg="));
 	}
 
