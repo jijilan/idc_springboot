@@ -65,7 +65,6 @@ public class SysUserController  extends BaseController {
      * @param password
      * @param verCode
      * @param request
-     * @param response
      * @return
      */
     @PostMapping(value = "/login")
@@ -82,7 +81,6 @@ public class SysUserController  extends BaseController {
         if (EmptyUtil.isNotEmpty(sysUser)) {
             sysUser.setPassWord("");
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
-            request.setAttribute("userId",sysUser.getId()+"");
             Map resMap=new HashMap();
             resMap.put("token",token);
             resMap.put("user", JSON.toJSON(sysUser));
@@ -90,6 +88,14 @@ public class SysUserController  extends BaseController {
         }
         return ResultView.error("账号密码错误");
     }
+
+    /**
+     * 根据手机号登录
+     * @param phoneNum
+     * @param verCode
+     * @param request
+     * @return
+     */
     @PostMapping(value = "/loginByPhone")
     public ResultView loginByPhone(@NotBlank(message = "手机号不能为空") String phoneNum,@NotBlank(message = "短信验证码不能为空")String verCode,HttpServletRequest request) {
         // 验证手机号是否合法
@@ -106,7 +112,6 @@ public class SysUserController  extends BaseController {
         SysUser sysUser = iSysUserService.getOne(qw);
         sysUser.setPassWord("");
         if (EmptyUtil.isNotEmpty(sysUser)) {
-            request.setAttribute("userId",sysUser.getId()+"");
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
             resMap.put("token",token);
@@ -124,7 +129,7 @@ public class SysUserController  extends BaseController {
     @PostMapping(value = "/phoneRegist")
     public ResultView regist(@NotBlank(message = "手机号不能为空") @Length(min = 11, max = 11, message = "手机号长度必须为11位") String phoneNum,
                             @NotBlank(message = "验证码不能为空")
-                            @Length(min = 6, max = 6, message = "验证码长度必须为6位") String verCode,@NotBlank(message = "密码不能为空") String passWord,@NotBlank(message = "品牌类型不能为空") String companyType) {
+                            @Length(min = 6, max = 6, message = "验证码长度必须为6位") String verCode,@NotBlank(message = "密码不能为空") String passWord,@NotBlank(message = "品牌类型不能为空") String companyType,HttpServletRequest request) {
         // 验证手机号是否合法
         if(!IdentityUtil.isMobileNO(phoneNum)){
             return ResultView.error("手机号不合法!");
