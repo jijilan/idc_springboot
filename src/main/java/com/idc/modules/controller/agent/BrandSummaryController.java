@@ -170,7 +170,30 @@ public class BrandSummaryController extends BaseController {
         List<BrandSummaryProduct> brandSummaryProducts=iBrandSummaryProductService.list(productQueryWrapper);
         resMap.put("brandSummary",brandSummary);
         resMap.put("brandSummaryApplies",brandSummaryApplies);
-        resMap.put("brandSummaryProducts",brandSummaryProducts);
+        // 1.根据基础id获取产品字典信息
+        // 1.获取品牌信息中配置的产品
+        QueryWrapper<BrandBasicInfor> basWrapper=new QueryWrapper<>();
+        basWrapper.lambda().eq(BrandBasicInfor::getId,brandUserRole.getBrandId());
+        BrandBasicInfor basicInfor=iBrandBasicInforService.getOne(basWrapper);
+        if(EmptyUtil.isEmpty(basicInfor)){
+            return ResultView.error(23,"基础信息为空!");
+        }
+        QueryWrapper<BrandDictionary> proWrapper=new QueryWrapper<>();
+        proWrapper.lambda().in(BrandDictionary::getCode,basicInfor.getCailliaolb().split(",")).orderByDesc(BrandDictionary::getBySort);
+        List<Map<String,Object>> productInforList= iBrandDictionaryService.listMaps(proWrapper.lambda().select(BrandDictionary::getCode,BrandDictionary::getName,BrandDictionary::getRemark));
+        for(int i=0;i<productInforList.size();i++){
+            Map thatParentMap=productInforList.get(i);
+            List<BrandSummaryProduct> childProduct=new ArrayList<>();
+            for(int j=0;j<brandSummaryProducts.size();j++){
+                BrandSummaryProduct thatBrandProduct=brandSummaryProducts.get(j);
+                if((thatParentMap.get("code")+"").equals(thatBrandProduct.getDicCode())){
+                    childProduct.add(thatBrandProduct);
+                }
+            }
+            thatParentMap.put("childProduct",childProduct);
+            productInforList.set(i,thatParentMap);
+        }
+        resMap.put("brandSummaryProducts",productInforList);
         if(EmptyUtil.isEmpty(brandSummary)){
             return ResultView.ok(23,"简介信息为空!",brandUserRole.getBrandId());
         }
