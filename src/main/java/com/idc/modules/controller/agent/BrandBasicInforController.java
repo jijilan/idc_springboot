@@ -53,7 +53,8 @@ public class BrandBasicInforController extends BaseController {
 
     //保存品牌制造商、代理商信息
     @PostMapping(value = "/saveBrandBasicInfor")
-    public ResultView saveBrandBasicInfor(@RequestBody JSONObject jsonParam) {
+    public ResultView saveBrandBasicInfor(String jsonParamStr) {
+        JSONObject jsonParam = JSONObject.parseObject(jsonParamStr);
         String basinforStr=jsonParam.getString("basinfor");
         String brandPersonsStr=jsonParam.getString("brandPersons");
         String userIdStr=jsonParam.getString("userId");
