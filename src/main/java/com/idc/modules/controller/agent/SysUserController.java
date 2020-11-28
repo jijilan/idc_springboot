@@ -70,7 +70,7 @@ public class SysUserController  extends BaseController {
      */
     @PostMapping(value = "/login")
     public ResultView login(@NotBlank(message = "用户名不能为空") String userName,
-                            @NotBlank(message = "密码不能为空") String password,@NotBlank(message = "验证码不能为空")String verCode,HttpServletRequest request, HttpServletResponse response) {
+                            @NotBlank(message = "密码不能为空") String password,@NotBlank(message = "验证码不能为空")String verCode,HttpServletRequest request) {
         // 验证码是否正确
         String imgCode=request.getSession().getAttribute("imgCode")+"";
         if(EmptyUtil.isEmpty(imgCode) || !verCode.equals(imgCode)){
@@ -82,6 +82,7 @@ public class SysUserController  extends BaseController {
         if (EmptyUtil.isNotEmpty(sysUser)) {
             sysUser.setPassWord("");
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
+            request.setAttribute("userId",sysUser.getId()+"");
             Map resMap=new HashMap();
             resMap.put("token",token);
             resMap.put("user", JSON.toJSON(sysUser));
@@ -90,7 +91,7 @@ public class SysUserController  extends BaseController {
         return ResultView.error("账号密码错误");
     }
     @PostMapping(value = "/loginByPhone")
-    public ResultView loginByPhone(@NotBlank(message = "手机号不能为空") String phoneNum,@NotBlank(message = "短信验证码不能为空")String verCode) {
+    public ResultView loginByPhone(@NotBlank(message = "手机号不能为空") String phoneNum,@NotBlank(message = "短信验证码不能为空")String verCode,HttpServletRequest request) {
         // 验证手机号是否合法
         if(!IdentityUtil.isMobileNO(phoneNum)){
             return ResultView.error("手机号不合法!");
@@ -105,6 +106,7 @@ public class SysUserController  extends BaseController {
         SysUser sysUser = iSysUserService.getOne(qw);
         sysUser.setPassWord("");
         if (EmptyUtil.isNotEmpty(sysUser)) {
+            request.setAttribute("userId",sysUser.getId()+"");
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
             resMap.put("token",token);
