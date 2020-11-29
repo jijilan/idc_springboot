@@ -82,8 +82,7 @@ public class UploadFileUtil {
                         throw new MyException(ResultEnum.CODE_7);
                     } else   {
                         // 新的照片名称，毫秒数加随机数，确保不能重复
-                        String fileName = System.currentTimeMillis() + RandomUtils.nextInt(1000000, 5000000)+oldFileName
-                                + "." + prefix;
+                        String fileName = System.currentTimeMillis() + RandomUtils.nextInt(1000000, 5000000)+oldFileName;
                         // 保存
                         FileOutputStream out = null;
                         try {
