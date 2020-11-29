@@ -80,12 +80,10 @@ public class UploadFileUtil {
                     if (attach[i].getSize() > filesize) {
                         log.info("上传大小不能超过5M");
                         throw new MyException(ResultEnum.CODE_7);
-                    } else if (prefix.equalsIgnoreCase("jpg") || prefix.equalsIgnoreCase("png")
-                            || prefix.equalsIgnoreCase("jpeg") || prefix.equalsIgnoreCase("pneg")
-                            || prefix.equalsIgnoreCase("webp")) {
+                    } else   {
                         // 新的照片名称，毫秒数加随机数，确保不能重复
                         String fileName = System.currentTimeMillis() + RandomUtils.nextInt(1000000, 5000000)
-                                + ".jpg";
+                                + "." + prefix;
                         // 保存
                         FileOutputStream out = null;
                         try {
@@ -105,9 +103,6 @@ public class UploadFileUtil {
                             e.printStackTrace();
                             throw new MyException(ResultEnum.CODE_6);
                         }
-                    } else {
-                        log.info("上传图片格式不正确");
-                        throw new MyException(ResultEnum.CODE_8);
                     }
                 } else {
                     continue;
