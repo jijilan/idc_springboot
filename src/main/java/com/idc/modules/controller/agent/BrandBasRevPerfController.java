@@ -56,8 +56,14 @@ public class BrandBasRevPerfController  extends BaseController {
      */
     @PostMapping(value = "/saveBrandBasLicense")
     public ResultView saveBrandBasLicense(@NotNull(message = "品牌商信息不能为空") String jsonStr,String jsonStrBac, HttpServletRequest request) {
+        int brandId=getBrandId(request,"1");
+        if(brandId==0){
+            return ResultView.error(24,"品牌制造商基础信息为空！");
+        }
         // 品牌商的数据
         BrandBasRevPerf brandBasRevPerf= JSON.parseObject(jsonStr, BrandBasRevPerf.class);
+        // 品牌制造商id绑定
+        brandBasRevPerf.setBrandId(brandId);
         List<String> checkFields=new ArrayList<>();
         checkFields.add("brandId");
         checkFields.add("yingyezz");
@@ -77,9 +83,17 @@ public class BrandBasRevPerfController  extends BaseController {
             iBrandBasRevPerfService.updateById(brandBasRevPerf);
         }
         if(EmptyUtil.isNotEmpty(jsonStrBac)){
+            brandId=getBrandId(request,"2");
+            if(brandId==0){
+                return ResultView.error(24,"品牌代理商基础信息为空！");
+            }
             // 保存代理商信息
-            checkFields.add("dailssqzmcl");
             brandBasRevPerf= JSON.parseObject(jsonStrBac, BrandBasRevPerf.class);
+            if(EmptyUtil.isEmpty(brandBasRevPerf)){
+                return ResultView.error(24,"代理商基本信息证明！");
+            }
+            checkFields.add("dailssqzmcl");
+            brandBasRevPerf.setBrandId(brandId);
             if (!"true".equals(checkMap.get("status") + "")) {
                 return  ResultView.error(checkMap.get("memo") + "");
             }
@@ -95,11 +109,11 @@ public class BrandBasRevPerfController  extends BaseController {
     }
 
     /**
-     *
+     * 获取1.2.5的基础信息
      * @return
      */
-    @PostMapping(value = "/getBrandBasLicense")
-    public ResultView getBrandBasLicense(HttpServletRequest request) {
+    @PostMapping(value = "/getBrandBasRevPerf")
+    public ResultView getBrandBasRevPerf(HttpServletRequest request) {
         userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
         QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
         brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId);
@@ -110,34 +124,124 @@ public class BrandBasRevPerfController  extends BaseController {
         }
         List<Map> brandLicens=iBrandBasRevPerfService.getBrandBasLicense(brandIds);
         if(EmptyUtil.isEmpty(brandLicens)){
-            return ResultView.error(24,"基础信息为空！");
+            return ResultView.error(24,"证明材料信息为空！");
         }
         return  ResultView.ok(brandLicens);
     }
 
+    /**
+     * 近三年营收情况
+     * @param jsonStr 制造商
+     * @param jsonStrBac 代理商信息
+     * @param request
+     * @return
+     */
     @PostMapping(value = "/saveBrandRevenue")
     public ResultView saveBrandRevenue(@NotNull(message = "必要信息不能为空") String jsonStr,String jsonStrBac, HttpServletRequest request) {
+        int brandId=getBrandId(request,"1");
+        if(brandId==0){
+            return ResultView.error(24,"品牌制造商基础信息为空！");
+        }
         // 制造商商的数据
         BrandBasRevPerf brandBasRevPerf= JSON.parseObject(jsonStr, BrandBasRevPerf.class);
+        if(EmptyUtil.isEmpty(brandBasRevPerf)){
+            return ResultView.error(24,"公司基本信息证明！");
+        }
+        List<String> checkFields=new ArrayList<>();
+        checkFields.add("yingysrOne");
+        checkFields.add("yingycwbbOne");
+        checkFields.add("yingysrTwo");
+        checkFields.add("yingycwbbTwo");
+        checkFields.add("yingycwbbThree");
+        Map checkMap= iBrandBasRevPerfService.checkBeanIsNull(brandBasRevPerf,checkFields);
+        if (!"true".equals(checkMap.get("status") + "")) {
+            return  ResultView.error(checkMap.get("memo") + "");
+        }
+        // 获取当前用户的制造商基础信息id
         UpdateWrapper<BrandBasRevPerf> updateWrapper=new UpdateWrapper<>();
         updateWrapper.lambda().set(BrandBasRevPerf::getYingycwbbOne,brandBasRevPerf.getYingycwbbOne()).set(BrandBasRevPerf::getYingysrOne,brandBasRevPerf.getYingysrOne())
                 .set(BrandBasRevPerf::getYingycwbbTwo,brandBasRevPerf.getYingycwbbTwo()).set(BrandBasRevPerf::getYingysrTwo,brandBasRevPerf.getYingysrTwo())
                 .set(BrandBasRevPerf::getYingycwbbThree,brandBasRevPerf.getYingycwbbThree()).set(BrandBasRevPerf::getYingysrThree,brandBasRevPerf.getYingysrThree())
-        .eq(BrandBasRevPerf::getId,brandBasRevPerf.getId());
+        .eq(BrandBasRevPerf::getBrandId,brandId);
         iBrandBasRevPerfService.update(brandBasRevPerf,updateWrapper);
         if(EmptyUtil.isNotEmpty(jsonStrBac)){
+            brandId=getBrandId(request,"2");
+            if(brandId==0){
+                return ResultView.error(24,"品牌代理商基础信息为空！");
+            }
             // 代理商信息
             brandBasRevPerf=JSON.parseObject(jsonStrBac, BrandBasRevPerf.class);
+            if(EmptyUtil.isEmpty(brandBasRevPerf)){
+                return ResultView.error(24,"代理商基本信息证明！");
+            }
+            checkMap= iBrandBasRevPerfService.checkBeanIsNull(brandBasRevPerf,checkFields);
+            if (!"true".equals(checkMap.get("status") + "")) {
+                return  ResultView.error(checkMap.get("memo") + "");
+            }
+            updateWrapper=new UpdateWrapper<>();
+            updateWrapper.lambda().set(BrandBasRevPerf::getYingycwbbOne,brandBasRevPerf.getYingycwbbOne()).set(BrandBasRevPerf::getYingysrOne,brandBasRevPerf.getYingysrOne())
+                    .set(BrandBasRevPerf::getYingycwbbTwo,brandBasRevPerf.getYingycwbbTwo()).set(BrandBasRevPerf::getYingysrTwo,brandBasRevPerf.getYingysrTwo())
+                    .set(BrandBasRevPerf::getYingycwbbThree,brandBasRevPerf.getYingycwbbThree()).set(BrandBasRevPerf::getYingysrThree,brandBasRevPerf.getYingysrThree())
+                    .eq(BrandBasRevPerf::getBrandId,brandId);
             iBrandBasRevPerfService.update(brandBasRevPerf,updateWrapper);
         }
-        return  ResultView.error("操作失败");
-    }
-    @PostMapping(value = "/getBrandRevenue")
-    public ResultView getBrandRevenue(HttpServletRequest request) {
-        userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
-        return  ResultView.error("操作失败");
+        return  ResultView.ok();
     }
 
+    /**
+     * 履约评价情况
+     * @param jsonStr
+     * @param jsonStrBac
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/saveBrandPerformance")
+    public ResultView saveBrandPerformance(@NotNull(message = "制造商信息不能为空") String jsonStr,String jsonStrBac, HttpServletRequest request) {
+        int brandId=getBrandId(request,"1");
+        if(brandId==0){
+            return ResultView.error(24,"品牌制造商基础信息为空！");
+        }
+        // 制造商商的数据
+        BrandBasRevPerf brandBasRevPerf= JSON.parseObject(jsonStr, BrandBasRevPerf.class);
+        if(EmptyUtil.isEmpty(brandBasRevPerf)){
+            return ResultView.error(24,"公司基本信息证明！");
+        }
+        List<String> checkFields=new ArrayList<>();
+        checkFields.add("lvyqkOne");
+        checkFields.add("lvyqkTwo");
+        checkFields.add("lvyqkThree");
+        Map checkMap= iBrandBasRevPerfService.checkBeanIsNull(brandBasRevPerf,checkFields);
+        if (!"true".equals(checkMap.get("status") + "")) {
+            return  ResultView.error(checkMap.get("memo") + "");
+        }
+        // 获取当前用户的制造商基础信息id
+        UpdateWrapper<BrandBasRevPerf> updateWrapper=new UpdateWrapper<>();
+        updateWrapper.lambda().set(BrandBasRevPerf::getLvyqkOne,brandBasRevPerf.getLvyqkOne()).set(BrandBasRevPerf::getLvyqkTwo,brandBasRevPerf.getLvyqkTwo())
+                .set(BrandBasRevPerf::getLvyqkThree,brandBasRevPerf.getLvyqkThree())
+                .eq(BrandBasRevPerf::getBrandId,brandId);
+        iBrandBasRevPerfService.update(brandBasRevPerf,updateWrapper);
+        if(EmptyUtil.isNotEmpty(jsonStrBac)){
+            brandId=getBrandId(request,"2");
+            if(brandId==0){
+                return ResultView.error(24,"品牌代理商基础信息为空！");
+            }
+            // 代理商信息
+            brandBasRevPerf=JSON.parseObject(jsonStrBac, BrandBasRevPerf.class);
+            if(EmptyUtil.isEmpty(brandBasRevPerf)){
+                return ResultView.error(24,"代理商基本信息证明！");
+            }
+            checkMap= iBrandBasRevPerfService.checkBeanIsNull(brandBasRevPerf,checkFields);
+            if (!"true".equals(checkMap.get("status") + "")) {
+                return  ResultView.error(checkMap.get("memo") + "");
+            }
+            updateWrapper=new UpdateWrapper<>();
+            updateWrapper.lambda().set(BrandBasRevPerf::getLvyqkOne,brandBasRevPerf.getLvyqkOne()).set(BrandBasRevPerf::getLvyqkTwo,brandBasRevPerf.getLvyqkTwo())
+                    .set(BrandBasRevPerf::getLvyqkThree,brandBasRevPerf.getLvyqkThree())
+                    .eq(BrandBasRevPerf::getBrandId,brandId);
+            iBrandBasRevPerfService.update(brandBasRevPerf,updateWrapper);
+        }
+        return  ResultView.ok();
+    }
 
 
 }

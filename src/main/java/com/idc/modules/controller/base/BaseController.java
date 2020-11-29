@@ -1,10 +1,17 @@
 package com.idc.modules.controller.base;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.idc.common.redis.RedisService;
+import com.idc.common.result.ResultView;
+import com.idc.common.result.SysConstant;
+import com.idc.common.utils.EmptyUtil;
 import com.idc.common.utils.JwtUtil;
+import com.idc.modules.entity.BrandUserRole;
 import com.idc.modules.service.IBrandUserRoleService;
 import com.idc.mvc.resources.WebResource;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @auther: jijl
@@ -38,6 +45,23 @@ public class BaseController {
                 TTLMillis);
         redisService.setAuthorizedSubject(uniqueId, obj, TTLMillis / 1000);
         return jwtToken;
+    }
+
+    /**
+     * 获取当前用户下的品牌商id
+     * @param request
+     * @param cType 1 制造商,2 代理商
+     * @return
+     */
+    protected int getBrandId(HttpServletRequest request,String cType){
+        int userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
+        QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
+        brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId).eq(BrandUserRole::getCType,cType);
+        BrandUserRole brandUserRole=iBrandUserRoleService.getOne(brandUserRoleQueryWrapper);
+        if(EmptyUtil.isNotEmpty(brandUserRole)){
+            return brandUserRole.getBrandId();
+        }
+        return 0;
     }
 
 }
