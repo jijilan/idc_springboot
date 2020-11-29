@@ -7,6 +7,7 @@ import com.idc.common.result.SysConstant;
 import com.idc.common.utils.EmptyUtil;
 import com.idc.common.utils.JwtUtil;
 import com.idc.modules.entity.BrandUserRole;
+import com.idc.modules.entity.SysUser;
 import com.idc.modules.service.IBrandUserRoleService;
 import com.idc.mvc.resources.WebResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,5 +64,21 @@ public class BaseController {
         }
         return 0;
     }
+    /**
+     * 获取当前用户下的自身的品牌id
+     * @param request
+     * @return
+     */
+    protected int getBrandIdByUser(HttpServletRequest request){
+        SysUser user=(SysUser) request.getAttribute(SysConstant.USER);
+        QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
+        brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,user.getId()).eq(BrandUserRole::getCType,user.getCType());
+        BrandUserRole brandUserRole=iBrandUserRoleService.getOne(brandUserRoleQueryWrapper);
+        if(EmptyUtil.isNotEmpty(brandUserRole)){
+            return brandUserRole.getBrandId();
+        }
+        return 0;
+    }
+
 
 }

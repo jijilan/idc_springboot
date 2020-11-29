@@ -6,5 +6,11 @@
     <sql id="Base_Column_List">
         id, brand_id, xyxzcf, xyxzcf_img, xyjyycml, xyjyycml_img, xyyzsxqymd, xyyzsxqymd_img, zlhgzm, zljcbg, zjzlcns, jdzjzmj, jdzzcl, txrzfyj, txksyxsj, txyxsc, txzzcl, sczyl, sczzcl, add_time
     </sql>
-
+    <!--查询该人员的品牌证照信息列表 -->
+    <select id="getBrandBasInfor" resultType="java.util.Map">
+       select tab_b.c_type,tab_c.c_name,tab_a.id,tab_a.brand_id,coalesce(xyxzcf,0) xyxzcf,coalesce(xyxzcf_img,'') xyxzcf_img,coalesce(xyjyycml,0)xyjyycml,coalesce(xyjyycml_img,'')xyjyycml_img,coalesce(xyyzsxqymd,0) xyyzsxqymd,coalesce(xyyzsxqymd_img,'')xyyzsxqymd_img,coalesce(zlhgzm,'')zlhgzm,coalesce(zljcbg,'') zljcbg, coalesce(zjzlcns,'')zjzlcns,coalesce(jdzjzmj,0) jdzjzmj,coalesce(jdzzcl,'') jdzzcl,coalesce(txrzfyj,'') txrzfyj,coalesce(txksyxsj,'') txksyxsj,
+        coalesce(txyxsc,0) txyxsc,coalesce(sczyl,0) sczyl,coalesce(sczzcl,'') sczzcl,coalesce(txzzcl,'') txzzcl from brand_bas_cre_qua tab_a,brand_basic_infor tab_b,company_type as tab_c
+        where tab_a.brand_id=tab_b.id and tab_c.c_type=tab_b.c_type
+        and tab_a.brand_id=#{brandId}
+    </select>
 </mapper>
