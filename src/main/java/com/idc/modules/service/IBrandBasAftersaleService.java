@@ -2,6 +2,10 @@ package com.idc.modules.service;
 
 import com.idc.modules.entity.BrandBasAftersale;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.idc.modules.entity.BrandBasCreQua;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -12,5 +16,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2020-11-27
  */
 public interface IBrandBasAftersaleService extends IService<BrandBasAftersale> {
-
+    List<Map> getBrandBasLicense(int brandId);
+    Map checkBeanIsNull(BrandBasAftersale brandBasAftersale, List<String> checkList);
 }

@@ -6,5 +6,12 @@
     <sql id="Base_Column_List">
         id, brand_id, dlwz, dlwzzzcl, shxysj, shxysj_cns, mfwbq, mfwbq_zzcl, shfa, sbclzsx, add_time
     </sql>
-
+    <!--查询该人员的品牌证照信息列表 -->
+    <select id="getBrandBasInfor" resultType="java.util.Map">
+       select tab_b.c_type,tab_c.c_name,tab_a.id,tab_a.brand_id,coalesce(dlwz,'') dlwz,coalesce(dlwzzzcl,'') dlwzzzcl,
+        coalesce(shxysj,0) shxysj,coalesce(shxysj_cns,'') shxysj_cns,coalesce(mfwbq,0) mfwbq,coalesce(mfwbq_zzcl,'') mfwbq_zzcl,
+        coalesce(shfa,0) shfa,coalesce(sbclzsx,'') sbclzsx from brand_bas_aftersale tab_a,brand_basic_infor tab_b,company_type as tab_c
+        where tab_a.brand_id=tab_b.id and tab_c.c_type=tab_b.c_type
+        and tab_a.brand_id=#{brandId}
+    </select>
 </mapper>
