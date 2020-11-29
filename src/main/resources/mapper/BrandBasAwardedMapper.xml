@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, brand_id, huojxm, huojcp, huojzm_img, add_time
+        id, brand_id, huojxm, huojcp,huojjb, huojzm_img, add_time
     </sql>
 
 </mapper>

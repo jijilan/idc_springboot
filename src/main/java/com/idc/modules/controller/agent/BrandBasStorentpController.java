@@ -53,6 +53,9 @@ public class BrandBasStorentpController extends BaseController {
         if (!"true".equals(checkMap.get("status") + "")) {
             return  ResultView.error(checkMap.get("memo") + "");
         }
+        for(int i=0;i<brandBasStorentps.size();i++){
+            brandBasStorentps.set(i,brandBasStorentps.get(i).setBrandId(brandId));
+        }
         // 删除应用数据
         UpdateWrapper<BrandBasStorentp> brandBasStorentpUpdateWrapper = new UpdateWrapper();
         brandBasStorentpUpdateWrapper.lambda().eq(BrandBasStorentp::getBrandId,brandId);

@@ -53,6 +53,9 @@ public class BrandBasPerformanceController extends BaseController {
         if (!"true".equals(checkMap.get("status") + "")) {
             return  ResultView.error(checkMap.get("memo") + "");
         }
+        for(int i=0;i<brandBasPerformances.size();i++){
+            brandBasPerformances.set(i,brandBasPerformances.get(i).setBrandId(brandId));
+        }
         // 删除应用数据
         UpdateWrapper<BrandBasPerformance> brandBasPerformanceUpdateWrapper = new UpdateWrapper();
         brandBasPerformanceUpdateWrapper.lambda().eq(BrandBasPerformance::getBrandId,brandId);

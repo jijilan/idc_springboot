@@ -1,5 +1,7 @@
 package com.idc.modules.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.util.Date;
 import java.io.Serializable;
@@ -27,6 +29,7 @@ public class BrandBasAwarded extends Model<BrandBasAwarded> {
     /**
      * 自增id
      */
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     /**
@@ -45,6 +48,12 @@ public class BrandBasAwarded extends Model<BrandBasAwarded> {
      */
     @JsonProperty("获奖产品")
     private String huojcp;
+
+    /**
+     * 获奖级别 字典表 p_code=C02
+     */
+    @JsonProperty("获奖级别")
+    private String huojjb;
 
     /**
      * 获奖证明图片

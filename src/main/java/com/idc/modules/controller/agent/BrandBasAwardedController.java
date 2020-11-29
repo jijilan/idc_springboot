@@ -53,6 +53,9 @@ public class BrandBasAwardedController extends BaseController {
         if (!"true".equals(checkMap.get("status") + "")) {
             return  ResultView.error(checkMap.get("memo") + "");
         }
+        for(int i=0;i<brandBasAwardeds.size();i++){
+            brandBasAwardeds.set(i,brandBasAwardeds.get(i).setBrandId(brandId));
+        }
         // 删除应用数据
         UpdateWrapper<BrandBasAwarded> brandBasAwardedUpdateWrapper = new UpdateWrapper();
         brandBasAwardedUpdateWrapper.lambda().eq(BrandBasAwarded::getBrandId,brandId);

@@ -55,6 +55,9 @@ public class BrandBasPatentController extends BaseController {
         if (!"true".equals(checkMap.get("status") + "")) {
             return  ResultView.error(checkMap.get("memo") + "");
         }
+        for(int i=0;i<brandBasPatents.size();i++){
+            brandBasPatents.set(i,brandBasPatents.get(i).setBrandId(brandId));
+        }
         // 删除应用数据
         UpdateWrapper<BrandBasPatent> brandBasPatentUpdateWrapper = new UpdateWrapper();
         brandBasPatentUpdateWrapper.lambda().eq(BrandBasPatent::getBrandId,brandId);
