@@ -3,6 +3,8 @@ package com.idc.modules.entity;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.util.Date;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -35,16 +37,19 @@ public class BrandBasAwarded extends Model<BrandBasAwarded> {
     /**
      * 获奖项目
      */
+    @JsonProperty("获奖项目")
     private String huojxm;
 
     /**
      * 获奖产品
      */
+    @JsonProperty("获奖产品")
     private String huojcp;
 
     /**
      * 获奖证明图片
      */
+    @JsonProperty("获奖证明图片")
     private String huojzmImg;
 
     /**

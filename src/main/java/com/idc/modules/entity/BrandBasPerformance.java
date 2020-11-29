@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -39,21 +41,25 @@ public class BrandBasPerformance extends Model<BrandBasPerformance> {
     /**
      * 项目名称
      */
+    @JsonProperty("项目名称")
     private String xmmc;
 
     /**
      * 合同签订日期
      */
+    @JsonProperty("合同签订日期")
     private String htqdrq;
 
     /**
      * 合同金额
      */
+    @JsonProperty("合同金额")
     private BigDecimal htprice;
 
     /**
      * 业绩证明材料
      */
+    @JsonProperty("业绩证明材料")
     private String yjzmcl;
 
     /**

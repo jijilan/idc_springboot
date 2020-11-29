@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -38,16 +40,19 @@ public class BrandBasPatent extends Model<BrandBasPatent> {
     /**
      * 专利名称
      */
+    @JsonProperty("专利名称")
     private String zhlmc;
 
     /**
      * 专利类型 字典表 p_code=C01
      */
+    @JsonProperty("专利类型")
     private String zhllx;
 
     /**
      * 专利图片
      */
+    @JsonProperty("专利图片")
     private String zhlImg;
 
     /**

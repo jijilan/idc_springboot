@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -38,11 +40,13 @@ public class BrandBasStorentp extends Model<BrandBasStorentp> {
     /**
      * 入库企业名
      */
+    @JsonProperty("入库企业名")
     private String rkqym;
 
     /**
      * 入库证明图片
      */
+    @JsonProperty("入库证明图片")
     private String rkzmImg;
 
     /**
