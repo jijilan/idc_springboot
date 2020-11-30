@@ -161,6 +161,9 @@ public class BrandSummaryController extends BaseController {
         Map resMap=new HashMap();
         // 获取简介基础信息
         BrandSummary brandSummary=iBrandSummaryService.getById(brandUserRole.getBrandId());
+        if(EmptyUtil.isEmpty(brandSummary)){
+            return ResultView.error(23,"品牌简介信息为空!");
+        }
         // 获取简介应用列表信息
         QueryWrapper<BrandSummaryApply> applyQueryWrapper=new QueryWrapper<>();
         applyQueryWrapper.lambda().eq(BrandSummaryApply::getSumaryId,brandSummary.getId());
