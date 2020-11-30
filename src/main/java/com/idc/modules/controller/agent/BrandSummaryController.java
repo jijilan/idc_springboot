@@ -161,17 +161,22 @@ public class BrandSummaryController extends BaseController {
         Map resMap=new HashMap();
         // 获取简介基础信息
         BrandSummary brandSummary=iBrandSummaryService.getById(brandUserRole.getBrandId());
-        if(EmptyUtil.isEmpty(brandSummary)){
-            return ResultView.error(23,"品牌简介信息为空!");
+
+        List<BrandSummaryApply> brandSummaryApplies=new ArrayList<>();
+        List<BrandSummaryProduct> brandSummaryProducts=new ArrayList<>();
+
+        if(EmptyUtil.isNotEmpty(brandSummary)){
+            log.info("基础信息不为空，才进行查询");
+            // 获取简介应用列表信息
+            QueryWrapper<BrandSummaryApply> applyQueryWrapper=new QueryWrapper<>();
+            applyQueryWrapper.lambda().eq(BrandSummaryApply::getSumaryId,brandSummary.getId());
+            brandSummaryApplies=iBrandSummaryApplyService.list(applyQueryWrapper);
+            // 获取产品列表信息
+            QueryWrapper<BrandSummaryProduct> productQueryWrapper=new QueryWrapper<>();
+            productQueryWrapper.lambda().eq(BrandSummaryProduct::getSumaryId,brandSummary.getId());
+            brandSummaryProducts=iBrandSummaryProductService.list(productQueryWrapper);
         }
-        // 获取简介应用列表信息
-        QueryWrapper<BrandSummaryApply> applyQueryWrapper=new QueryWrapper<>();
-        applyQueryWrapper.lambda().eq(BrandSummaryApply::getSumaryId,brandSummary.getId());
-        List<BrandSummaryApply> brandSummaryApplies=iBrandSummaryApplyService.list(applyQueryWrapper);
-        // 获取产品列表信息
-        QueryWrapper<BrandSummaryProduct> productQueryWrapper=new QueryWrapper<>();
-        productQueryWrapper.lambda().eq(BrandSummaryProduct::getSumaryId,brandSummary.getId());
-        List<BrandSummaryProduct> brandSummaryProducts=iBrandSummaryProductService.list(productQueryWrapper);
+
         resMap.put("brandSummary",brandSummary);
         resMap.put("brandSummaryApplies",brandSummaryApplies);
         // 1.根据基础id获取产品字典信息
@@ -198,9 +203,6 @@ public class BrandSummaryController extends BaseController {
             productInforList.set(i,thatParentMap);
         }
         resMap.put("brandSummaryProducts",productInforList);
-        if(EmptyUtil.isEmpty(brandSummary)){
-            return ResultView.ok(23,"简介信息为空!",brandUserRole.getBrandId());
-        }
         return ResultView.ok(resMap);
     }
 
