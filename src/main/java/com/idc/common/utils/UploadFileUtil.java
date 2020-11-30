@@ -59,6 +59,10 @@ public class UploadFileUtil {
         }
     }
 
+    public static void main(String[] args) {
+        System.out.println("123safaSfasfsafsa".substring(0, 5));
+    }
+
     public static String flowUpload(MultipartFile[] attach, String portraitPath, String path) throws MyException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String date = simpleDateFormat.format(new Date());
@@ -80,9 +84,17 @@ public class UploadFileUtil {
                     if (attach[i].getSize() > filesize) {
                         log.info("上传大小不能超过5M");
                         throw new MyException(ResultEnum.CODE_7);
-                    } else   {
-                        // 新的照片名称，毫秒数加随机数，确保不能重复
-                        String fileName = System.currentTimeMillis() + RandomUtils.nextInt(1000000, 5000000)+oldFileName;
+                    } else {
+                        String fileName = "";
+                        if (EmptyUtil.isNotEmpty(oldFileName) && oldFileName.length() > 8) {
+                            // 新的照片名称，毫秒数加随机数，确保不能重复
+                            fileName = System.currentTimeMillis() + oldFileName.indexOf(0, 5) + RandomUtils.nextInt(1000000, 5000000)
+                                    + "." + prefix;
+                        } else {
+                            // 新的照片名称，毫秒数加随机数，确保不能重复
+                            fileName = System.currentTimeMillis() + RandomUtils.nextInt(1000000, 5000000)
+                                    + "." + prefix;
+                        }
                         // 保存
                         FileOutputStream out = null;
                         try {
@@ -114,18 +126,19 @@ public class UploadFileUtil {
 
     /**
      * 上传任意类型文件接口
-     * @param attach 文件
+     *
+     * @param attach       文件
      * @param portraitPath 上传服务器路径
-     * @param readUrl 访问地址
+     * @param readUrl      访问地址
      * @return
      * @throws MyException
      */
-    public static String fileUploadAnyType(MultipartFile[] attach, String portraitPath,String readUrl) throws MyException {
+    public static String fileUploadAnyType(MultipartFile[] attach, String portraitPath, String readUrl) throws MyException {
         String Now_Date = DateUtils.getCurrentDate("yyyy/MM/dd");
         String uploadPath = "";
-        String fileName="";
+        String fileName = "";
         // 拼接文件保存路径
-        String pathName=portraitPath+"/"+Now_Date+"/";
+        String pathName = portraitPath + "/" + Now_Date + "/";
         // 若文件夹不存在则创建文件夹
         checkDirectories(pathName);
         // 文件列表是否为空
@@ -137,26 +150,26 @@ public class UploadFileUtil {
                     // 获取原文件名的后缀
                     String prefix = FilenameUtils.getExtension(oldFileName);
                     // 拼接生成的文件名称
-                    fileName=IdentityUtil.uuid()+"."+prefix;
-                    int filesize = 5*1024*1024;
+                    fileName = IdentityUtil.uuid() + "." + prefix;
+                    int filesize = 5 * 1024 * 1024;
                     if (attach[i].getSize() > filesize) {
                         log.info("上传大小不能超过5M");
                         throw new MyException(ResultEnum.CODE_7);
-                    }else{
+                    } else {
                         // 保存
                         FileOutputStream out = null;
                         try {
                             // 把MultipartFile中的文件流数据的数据输出至目标文件中
-                            out = new FileOutputStream(pathName+fileName);
+                            out = new FileOutputStream(pathName + fileName);
                             out.write(attach[i].getBytes());
                             out.flush();
                             out.close();
                             if (i == 0) {
-                                uploadPath += readUrl+Now_Date+"/"+fileName;
+                                uploadPath += readUrl + Now_Date + "/" + fileName;
                             } else {
-                                uploadPath += ";" + readUrl+Now_Date+"/"+fileName;
+                                uploadPath += ";" + readUrl + Now_Date + "/" + fileName;
                             }
-                            log.info("图片路径:"+uploadPath);
+                            log.info("图片路径:" + uploadPath);
                         } catch (Exception e) {
                             log.info("上传失败！");
                             e.printStackTrace();
