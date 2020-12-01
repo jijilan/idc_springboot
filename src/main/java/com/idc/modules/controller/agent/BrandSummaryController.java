@@ -160,7 +160,9 @@ public class BrandSummaryController extends BaseController {
         }
         Map resMap=new HashMap();
         // 获取简介基础信息
-        BrandSummary brandSummary=iBrandSummaryService.getById(brandUserRole.getBrandId());
+        QueryWrapper<BrandSummary> brandSummaryQueryWrapper=new QueryWrapper<>();
+        brandSummaryQueryWrapper.lambda().eq(BrandSummary::getBrandId,brandUserRole.getBrandId());
+        BrandSummary brandSummary=iBrandSummaryService.getOne(brandSummaryQueryWrapper);
 
         List<BrandSummaryApply> brandSummaryApplies=new ArrayList<>();
         List<BrandSummaryProduct> brandSummaryProducts=new ArrayList<>();
