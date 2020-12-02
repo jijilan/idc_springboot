@@ -234,7 +234,7 @@ public class SysUserController  extends BaseController {
         }
         phoneCode=IdentityUtil.getRandomNum(6);
         // 往redis中设置验证码
-        redisService.setAuthorizedSubject(phoneNum+codeTypeStr, phoneCode, 180);
+        redisService.setAuthorizedSubject(phoneNum+codeTypeStr, phoneCode, 60);
         return ResultView.ok("发送成功",phoneCode);
     }
 
