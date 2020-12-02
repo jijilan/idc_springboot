@@ -143,9 +143,15 @@ public class SysUserController  extends BaseController {
         sysUser.setPhoneNum(phoneNum);
         sysUser.setCType(Integer.parseInt(companyType));
         sysUser.setPassWord(MD5Util.getMd5Code(passWord));
+        QueryWrapper<SysUser> qw = new QueryWrapper<>();
+        qw.lambda().eq(SysUser::getUserName, sysUser.getUserName());
+        // 注册时检验当前账号是否已被注册
+        if(EmptyUtil.isNotEmpty(iSysUserService.getOne(qw))){
+            return ResultView.error("手机号已被注册!");
+        }
         boolean saveUser=iSysUserService.save(sysUser);
         // 将数据重新查出来获取id
-        QueryWrapper<SysUser> qw = new QueryWrapper<>();
+        qw = new QueryWrapper<>();
         qw.lambda().eq(SysUser::getUserName, sysUser.getUserName());
         sysUser=iSysUserService.getOne(qw);
         if (saveUser) {
