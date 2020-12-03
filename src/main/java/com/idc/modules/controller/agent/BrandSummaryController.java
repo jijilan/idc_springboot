@@ -55,12 +55,9 @@ public class BrandSummaryController extends BaseController {
     @PostMapping(value = "/saveBrandSummary")
     public ResultView saveBrandSummary(String jsonParamStr,HttpServletRequest request) {
         JSONObject jsonParam = JSONObject.parseObject(jsonParamStr);
-        int userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
-        QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
-        brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId).eq(BrandUserRole::getCType,"1");
-        BrandUserRole brandUserRole=iBrandUserRoleService.getOne(brandUserRoleQueryWrapper);
-        if(EmptyUtil.isEmpty(brandUserRole)){
-            return ResultView.error(23,"基础信息为空!");
+        int brandId=getBrandId(request,"1");
+        if(EmptyUtil.isEmpty(brandId)){
+            return ResultView.error(23,"制造商基础信息为空!");
         }
         String brandSummaryStr=jsonParam.getString("brandSummary");
         String summaryApplyStr=jsonParam.getString("summaryApplys");
@@ -88,7 +85,7 @@ public class BrandSummaryController extends BaseController {
             return  ResultView.error(checkMap.get("memo") + "");
         }
         // 设置当前操作人品牌id为此品牌id
-        brandSummary.setBrandId(brandUserRole.getBrandId());
+        brandSummary.setBrandId(brandId);
         // 判断传入的id是否为空
         if(EmptyUtil.isEmpty(brandSummary.getId())){
 
@@ -126,17 +123,13 @@ public class BrandSummaryController extends BaseController {
 
     @PostMapping(value = "/getProductListByBrandId")
     public ResultView getProductListByBrandId(HttpServletRequest request) {
-        int userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
-        QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
-        // 获取当前用户品牌id
-        brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId).eq(BrandUserRole::getCType,"1");
-        BrandUserRole brandUserRole=iBrandUserRoleService.getOne(brandUserRoleQueryWrapper);
-        if(EmptyUtil.isEmpty(brandUserRole)){
+        int brandId=getBrandId(request,"1");
+        if(EmptyUtil.isEmpty(brandId)){
             return ResultView.error(23,"基础信息为空!");
         }
         // 1.获取品牌信息中配置的产品
         QueryWrapper<BrandBasicInfor> basWrapper=new QueryWrapper<>();
-        basWrapper.lambda().eq(BrandBasicInfor::getId,brandUserRole.getBrandId());
+        basWrapper.lambda().eq(BrandBasicInfor::getId,brandId);
         BrandBasicInfor basicInfor=iBrandBasicInforService.getOne(basWrapper);
         if(EmptyUtil.isEmpty(basicInfor)){
             return ResultView.error(23,"基础信息为空!");
@@ -151,17 +144,14 @@ public class BrandSummaryController extends BaseController {
     }
     @PostMapping(value = "/getSummaryByBrandId")
     public ResultView getSummaryByBrandId(HttpServletRequest request) {
-        int userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
-        QueryWrapper<BrandUserRole> brandUserRoleQueryWrapper=new QueryWrapper<>();
-        brandUserRoleQueryWrapper.lambda().eq(BrandUserRole::getUserId,userId).eq(BrandUserRole::getCType,"1");
-        BrandUserRole brandUserRole=iBrandUserRoleService.getOne(brandUserRoleQueryWrapper);
-        if(EmptyUtil.isEmpty(brandUserRole)){
+        int brandId=getBrandId(request,"1");
+        if(EmptyUtil.isEmpty(brandId)){
             return ResultView.error(23,"基础信息为空!");
         }
         Map resMap=new HashMap();
         // 获取简介基础信息
         QueryWrapper<BrandSummary> brandSummaryQueryWrapper=new QueryWrapper<>();
-        brandSummaryQueryWrapper.lambda().eq(BrandSummary::getBrandId,brandUserRole.getBrandId());
+        brandSummaryQueryWrapper.lambda().eq(BrandSummary::getBrandId,brandId);
         BrandSummary brandSummary=iBrandSummaryService.getOne(brandSummaryQueryWrapper);
 
         List<BrandSummaryApply> brandSummaryApplies=new ArrayList<>();
@@ -184,7 +174,7 @@ public class BrandSummaryController extends BaseController {
         // 1.根据基础id获取产品字典信息
         // 1.获取品牌信息中配置的产品
         QueryWrapper<BrandBasicInfor> basWrapper=new QueryWrapper<>();
-        basWrapper.lambda().eq(BrandBasicInfor::getId,brandUserRole.getBrandId());
+        basWrapper.lambda().eq(BrandBasicInfor::getId,brandId);
         BrandBasicInfor basicInfor=iBrandBasicInforService.getOne(basWrapper);
         if(EmptyUtil.isEmpty(basicInfor)){
             return ResultView.error(23,"基础信息为空!");

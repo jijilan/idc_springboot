@@ -47,8 +47,6 @@ public class BrandBasRevPerfController  extends BaseController {
     private IBrandBasRevPerfService iBrandBasRevPerfService;
     @Autowired
     private IBrandUserRoleService iBrandUserRoleService;
-
-
     /**
      * 保存公司基本信息证明
      * @param request

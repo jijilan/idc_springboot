@@ -150,6 +150,9 @@ public class BrandBasicInfor extends Model<BrandBasicInfor> {
     @JsonProperty("是否三年完税证明")
     private Integer pinpsannwszm;
 
+    @JsonProperty("申报材料真实性承诺书")
+    private String chengns;
+
     /**
      * 添加时间
      */

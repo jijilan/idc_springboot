@@ -47,7 +47,8 @@ public class BrandBasAwardedController extends BaseController {
      */
     @PostMapping(value = "/saveBrandBasAwarded")
     public ResultView saveBrandBasAwarded(@NotNull(message = "获奖相关信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         List<BrandBasAwarded> brandBasAwardeds= JSON.parseArray(jsonStr,BrandBasAwarded.class);
         Map checkMap= iBrandBasAwardedService.checkBeanListIsNull(brandBasAwardeds);
         if (!"true".equals(checkMap.get("status") + "")) {
@@ -72,7 +73,8 @@ public class BrandBasAwardedController extends BaseController {
      */
     @PostMapping(value = "/getBrandBasAwarded")
     public ResultView getBrandBasAwarded( HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         QueryWrapper<BrandBasAwarded> brandBasAwardedQueryWrapper=new QueryWrapper<>();
         brandBasAwardedQueryWrapper.lambda().eq(BrandBasAwarded::getBrandId,brandId);
         List<BrandBasAwarded> brandBasAwardeds=iBrandBasAwardedService.list(brandBasAwardedQueryWrapper);

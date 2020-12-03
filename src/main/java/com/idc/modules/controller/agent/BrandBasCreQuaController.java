@@ -51,7 +51,8 @@ public class BrandBasCreQuaController  extends BaseController {
      */
     @PostMapping(value = "/saveBrandCredit")
     public ResultView saveBrandCredit(@NotNull(message = "品牌代理商企业信用不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -86,7 +87,8 @@ public class BrandBasCreQuaController  extends BaseController {
      */
     @PostMapping(value = "/saveBrandQuality")
     public ResultView saveBrandQuality(@NotNull(message = "产品质量信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -117,7 +119,8 @@ public class BrandBasCreQuaController  extends BaseController {
      */
     @PostMapping(value = "/saveBrandBuildArea")
     public ResultView saveBrandBuildArea(@NotNull(message = "建筑面积信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -146,7 +149,8 @@ public class BrandBasCreQuaController  extends BaseController {
      */
     @PostMapping(value = "/saveBrandManageSystem")
     public ResultView saveBrandManageSystem(@NotNull(message = "管理体系认证信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -178,7 +182,8 @@ public class BrandBasCreQuaController  extends BaseController {
      */
     @PostMapping(value = "/saveBrandMarketShare")
     public ResultView saveBrandMarketShare(@NotNull(message = "市场占有率信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -205,7 +210,8 @@ public class BrandBasCreQuaController  extends BaseController {
      */
     @PostMapping(value = "/getBrandBasInfor")
     public ResultView getBrandBasInfor(HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }

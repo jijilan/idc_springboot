@@ -41,6 +41,8 @@ public class BrandBasicInforServiceImpl extends ServiceImpl<BrandBasicInforMappe
         List<String> ignoreList=new ArrayList<>();
         // 代理品牌的品牌制造商名称
         ignoreList.add("dailppzzsmc");
+        // 申报材料真实性承诺书
+        ignoreList.add("chengns");
         Map checkMap=new HashMap();
         checkMap=BeanCheckUtils.checkObject(brandBasicInfor,ignoreList,checkInfor);
         return checkMap;

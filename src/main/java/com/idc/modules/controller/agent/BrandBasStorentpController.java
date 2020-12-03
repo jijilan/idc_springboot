@@ -47,7 +47,8 @@ public class BrandBasStorentpController extends BaseController {
      */
     @PostMapping(value = "/saveBrandBasStorentp")
     public ResultView saveBrandBasStorentp(@NotNull(message = "专利证书相关信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         List<BrandBasStorentp> brandBasStorentps= JSON.parseArray(jsonStr,BrandBasStorentp.class);
         Map checkMap= iBrandBasStorentpService.checkBeanListIsNull(brandBasStorentps);
         if (!"true".equals(checkMap.get("status") + "")) {
@@ -72,7 +73,8 @@ public class BrandBasStorentpController extends BaseController {
      */
     @PostMapping(value = "/getBrandBasStorentp")
     public ResultView getBrandBasStorentp( HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         QueryWrapper<BrandBasStorentp> brandBasStorentpQueryWrapper=new QueryWrapper<>();
         brandBasStorentpQueryWrapper.lambda().eq(BrandBasStorentp::getBrandId,brandId);
         List<BrandBasStorentp> brandBasStorentps=iBrandBasStorentpService.list(brandBasStorentpQueryWrapper);

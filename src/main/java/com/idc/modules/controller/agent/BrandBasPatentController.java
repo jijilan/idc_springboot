@@ -49,7 +49,8 @@ public class BrandBasPatentController extends BaseController {
      */
     @PostMapping(value = "/saveBrandBasPatent")
     public ResultView saveBrandBasPatent(@NotNull(message = "专利证书相关信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         List<BrandBasPatent> brandBasPatents= JSON.parseArray(jsonStr,BrandBasPatent.class);
         Map checkMap= iBrandBasPatentService.checkBeanListIsNull(brandBasPatents);
         if (!"true".equals(checkMap.get("status") + "")) {
@@ -74,7 +75,8 @@ public class BrandBasPatentController extends BaseController {
      */
     @PostMapping(value = "/getBrandBasPatent")
     public ResultView getBrandBasPatent( HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         QueryWrapper<BrandBasPatent> brandBasPatentQueryWrapper=new QueryWrapper<>();
         brandBasPatentQueryWrapper.lambda().eq(BrandBasPatent::getBrandId,brandId);
         List<BrandBasPatent> brandBasPatents=iBrandBasPatentService.list(brandBasPatentQueryWrapper);

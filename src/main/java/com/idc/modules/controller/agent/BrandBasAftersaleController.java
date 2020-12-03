@@ -2,13 +2,17 @@ package com.idc.modules.controller.agent;
 
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.idc.common.result.ResultView;
 import com.idc.common.utils.EmptyUtil;
 import com.idc.modules.controller.base.BaseController;
 import com.idc.modules.entity.BrandBasAftersale;
 import com.idc.modules.entity.BrandBasCreQua;
+import com.idc.modules.entity.BrandBasicInfor;
+import com.idc.modules.entity.BrandDictionary;
 import com.idc.modules.service.IBrandBasAftersaleService;
+import com.idc.modules.service.IBrandBasicInforService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -38,6 +42,8 @@ import java.util.Map;
 public class BrandBasAftersaleController   extends BaseController {
     @Autowired
     private IBrandBasAftersaleService iBrandBasAftersaleService;
+    @Autowired
+    private IBrandBasicInforService iBrandBasicInforService;
 
     private int brandId;
     /**
@@ -48,7 +54,8 @@ public class BrandBasAftersaleController   extends BaseController {
      */
     @PostMapping(value = "/saveBrandLocation")
     public ResultView saveBrandLocation(@NotNull(message = "售后服务机构地理位置不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -78,7 +85,8 @@ public class BrandBasAftersaleController   extends BaseController {
      */
     @PostMapping(value = "/saveBrandReplyTime")
     public ResultView saveBrandReplyTime(@NotNull(message = "售后响应时间信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -107,7 +115,8 @@ public class BrandBasAftersaleController   extends BaseController {
      */
     @PostMapping(value = "/saveBrandMaintenance")
     public ResultView saveBrandMaintenance(@NotNull(message = "免费维保期信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -136,7 +145,8 @@ public class BrandBasAftersaleController   extends BaseController {
      */
     @PostMapping(value = "/saveBrandProgram")
     public ResultView saveBrandProgram(@NotNull(message = "售后方案信息不能为空") String jsonStr, HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -164,9 +174,10 @@ public class BrandBasAftersaleController   extends BaseController {
      */
     @PostMapping(value = "/saveBrandCommitment")
     public ResultView saveBrandCommitment(@NotNull(message = "申办材料真实性承诺书信息不能为空") String jsonStr, HttpServletRequest request) {
+        // 保存品牌制造商的数据信息
         brandId=getBrandIdByUser(request);
         if(brandId==0){
-            return ResultView.error(24,"品牌制造商基础信息为空！");
+            return ResultView.error(24,"品牌代理商基础信息为空！");
         }
         // 品牌商的数据
         BrandBasAftersale brandBasAftersale= JSON.parseObject(jsonStr, BrandBasAftersale.class);
@@ -177,11 +188,10 @@ public class BrandBasAftersaleController   extends BaseController {
             return  ResultView.error(checkMap.get("memo") + "");
         }
         // 执行更新方法
-        brandBasAftersale.setBrandId(brandId);
-        UpdateWrapper<BrandBasAftersale> updateWrapper=new UpdateWrapper<>();
-        updateWrapper.lambda().set(BrandBasAftersale::getSbclzsx,brandBasAftersale.getSbclzsx())
-                .eq(BrandBasAftersale::getBrandId,brandId);
-        iBrandBasAftersaleService.update(brandBasAftersale,updateWrapper);
+        UpdateWrapper<BrandBasicInfor> updateWrapper=new UpdateWrapper<>();
+        updateWrapper.lambda().set(BrandBasicInfor::getChengns,brandBasAftersale.getSbclzsx())
+                .eq(BrandBasicInfor::getId,brandId);
+        iBrandBasicInforService.update(new BrandBasicInfor(),updateWrapper);
         return  ResultView.ok("操作成功!");
     }
     /**
@@ -190,7 +200,8 @@ public class BrandBasAftersaleController   extends BaseController {
      */
     @PostMapping(value = "/getBrandBasInfor")
     public ResultView getBrandBasInfor(HttpServletRequest request) {
-        brandId=getBrandIdByUser(request);
+        // 保存品牌制造商的数据信息
+        brandId=getBrandId(request,"1");
         if(brandId==0){
             return ResultView.error(24,"品牌制造商基础信息为空！");
         }
@@ -200,4 +211,23 @@ public class BrandBasAftersaleController   extends BaseController {
         }
         return  ResultView.ok(brandBasinfor);
     }
+
+    /**
+     * 证明材料17-获取申报材料证明承诺书
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/getZsxchengns")
+    public ResultView getZsxchengns(HttpServletRequest request) {
+        // 保存品牌制造商的数据信息
+        brandId=getBrandIdByUser(request);
+        if(brandId==0){
+            return ResultView.error(24,"品牌代理商基础信息为空！");
+        }
+        QueryWrapper<BrandBasicInfor> basicInforQueryWrapper=new QueryWrapper<>();
+        basicInforQueryWrapper.lambda().eq(BrandBasicInfor::getId,brandId);
+        Map resMap=iBrandBasicInforService.getMap(basicInforQueryWrapper.lambda().select(BrandBasicInfor::getChengns));
+        return  ResultView.ok(resMap);
+    }
+
 }

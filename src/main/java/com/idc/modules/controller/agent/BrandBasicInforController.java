@@ -171,6 +171,8 @@ public class BrandBasicInforController extends BaseController {
     }
     @PostMapping(value = "/checkBrandInforIsOk")
     public ResultView checkBrandInforIsOk( HttpServletRequest request) {
+        // 基础信息和承诺书使用自身的品牌代理商id，其他证明材料全使用品牌制造商的id
+
         // 获取当前用户自身的品牌id
         int brandIdSelf=getBrandIdByUser(request);
         // 下面的信息全部检查品牌商的信息
@@ -196,7 +198,7 @@ public class BrandBasicInforController extends BaseController {
         }
         // 3.brand_bas_rev_perf	证明材料 1(基本信息证明）、2（近三年营收情况）、5（履约评价情况）
         QueryWrapper<BrandBasRevPerf> brandBasRevPerfQueryWrapper = new QueryWrapper<>();
-        brandBasRevPerfQueryWrapper.lambda().eq(BrandBasRevPerf::getBrandId, brandIdSelf);
+        brandBasRevPerfQueryWrapper.lambda().eq(BrandBasRevPerf::getBrandId, brandId);
         BrandBasRevPerf brandBasRevPerf=iBrandBasRevPerfService.getOne(brandBasRevPerfQueryWrapper);
         if(EmptyUtil.isEmpty(brandBasRevPerf.getYingyezz())){
             return ResultView.error(24,"证明材料 1(基本信息证明）为空！");
@@ -206,7 +208,7 @@ public class BrandBasicInforController extends BaseController {
         }
         // 4.brand_bas_cre_qua	证明材料3（企业信用）、4（产品质量）、6（建筑面积）、7（管理体系认证）、8(市场占有率)
         QueryWrapper<BrandBasCreQua> brandBasCreQuaQueryWrapper = new QueryWrapper<>();
-        brandBasCreQuaQueryWrapper.lambda().eq(BrandBasCreQua::getBrandId, brandIdSelf);
+        brandBasCreQuaQueryWrapper.lambda().eq(BrandBasCreQua::getBrandId, brandId);
         BrandBasCreQua brandBasCreQua=iBrandBasCreQuaService.getOne(brandBasCreQuaQueryWrapper);
         if(EmptyUtil.isEmpty(brandBasCreQua) || EmptyUtil.isEmpty(brandBasCreQua.getXyxzcf())){
             return ResultView.error(24,"证明材料 3(企业信用）为空！");
@@ -228,21 +230,21 @@ public class BrandBasicInforController extends BaseController {
         }
         // 5.brand_bas_patent	证明材料9：拟入库品牌产品相关的专利证书提供专利复印件
         QueryWrapper<BrandBasPatent> brandBasPatentQueryWrapper = new QueryWrapper<>();
-        brandBasPatentQueryWrapper.lambda().eq(BrandBasPatent::getBrandId, brandIdSelf);
+        brandBasPatentQueryWrapper.lambda().eq(BrandBasPatent::getBrandId, brandId);
         BrandBasPatent brandBasPatent=iBrandBasPatentService.getOne(brandBasPatentQueryWrapper);
         if(EmptyUtil.isEmpty(brandBasCreQua.getSczyl())){
             return ResultView.error(24,"证明材料 9(拟入库品牌产品相关的专利证书提供专利复印件）为空！");
         }
         // 6.brand_bas_awarded	证明材料10.拟入库品牌产品获奖情况
         QueryWrapper<BrandBasAwarded> brandBasAwardedQueryWrapper = new QueryWrapper<>();
-        brandBasAwardedQueryWrapper.lambda().eq(BrandBasAwarded::getBrandId, brandIdSelf);
+        brandBasAwardedQueryWrapper.lambda().eq(BrandBasAwarded::getBrandId, brandId);
         BrandBasAwarded brandBasAwarded=iBrandBasAwardedService.getOne(brandBasAwardedQueryWrapper);
         if(EmptyUtil.isEmpty(brandBasAwarded)){
             return ResultView.error(24,"证明材料 10(拟入库品牌产品获奖情况）为空！");
         }
         // 7.brand_bas_aftersale	证明材料11（售后服务机构地理位置）,12（售后响应时间）,13（免费维保期）,16（售后方案）,17（申办材料真实性承诺书）
         QueryWrapper<BrandBasAftersale> brandBasAftersaleQueryWrapper = new QueryWrapper<>();
-        brandBasAftersaleQueryWrapper.lambda().eq(BrandBasAftersale::getBrandId, brandIdSelf);
+        brandBasAftersaleQueryWrapper.lambda().eq(BrandBasAftersale::getBrandId, brandId);
         BrandBasAftersale brandBasAftersale=iBrandBasAftersaleService.getOne(brandBasAftersaleQueryWrapper);
         if(EmptyUtil.isEmpty(brandBasAftersale)|| EmptyUtil.isEmpty(brandBasAftersale.getDlwz())){
             return ResultView.error(24,"证明材料 11(售后服务机构地理位置）为空！");
@@ -255,14 +257,14 @@ public class BrandBasicInforController extends BaseController {
         }
         // 8.brand_bas_storentp	证明材料14.品牌入库情况
         QueryWrapper<BrandBasStorentp> brandBasStorentpQueryWrapper = new QueryWrapper<>();
-        brandBasStorentpQueryWrapper.lambda().eq(BrandBasStorentp::getBrandId, brandIdSelf);
+        brandBasStorentpQueryWrapper.lambda().eq(BrandBasStorentp::getBrandId, brandId);
         BrandBasStorentp brandBasStorentp=iBrandBasStorentpService.getOne(brandBasStorentpQueryWrapper);
         if(EmptyUtil.isEmpty(brandBasStorentp)){
             return ResultView.error(24,"证明材料 14(品牌入库情况）为空！");
         }
         // 9.brand_bas_performance	证明材料15.产品业绩情况
         QueryWrapper<BrandBasPerformance> brandBasPerformanceQueryWrapper = new QueryWrapper<>();
-        brandBasPerformanceQueryWrapper.lambda().eq(BrandBasPerformance::getBrandId, brandIdSelf);
+        brandBasPerformanceQueryWrapper.lambda().eq(BrandBasPerformance::getBrandId, brandId);
         BrandBasPerformance brandBasPerformance=iBrandBasPerformanceService.getOne(brandBasPerformanceQueryWrapper);
         if(EmptyUtil.isEmpty(brandBasPerformance)){
             return ResultView.error(24,"证明材料 15(产品业绩情况）为空！");
@@ -270,7 +272,7 @@ public class BrandBasicInforController extends BaseController {
         if(EmptyUtil.isEmpty(brandBasAftersale.getShfa())){
             return ResultView.error(24,"证明材料 16(售后方案）为空！");
         }
-        if(EmptyUtil.isEmpty(brandBasAftersale.getShxysjCns())){
+        if(EmptyUtil.isEmpty(brandBasicInfor.getChengns())){
             return ResultView.error(24,"证明材料 17(申办材料真实性承诺书）为空！");
         }
 
