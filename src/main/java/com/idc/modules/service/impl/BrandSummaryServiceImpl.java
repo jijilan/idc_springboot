@@ -31,6 +31,7 @@ public class BrandSummaryServiceImpl extends ServiceImpl<BrandSummaryMapper, Bra
     @Override
     public Map checkBeanIsNull(BrandSummary brandSummary) {
         List<String> ignoreList=new ArrayList<>();
+        ignoreList.add("brandId");
         // 代理品牌的品牌制造商名称
         Map checkMap=new HashMap();
         checkMap= BeanCheckUtils.checkObject(brandSummary,ignoreList,checkInfor);

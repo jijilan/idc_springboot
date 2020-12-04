@@ -67,6 +67,8 @@ public class BrandSummaryController extends BaseController {
         }
         // 1.简介信息-主表数据
         BrandSummary brandSummary= JSON.parseObject(brandSummaryStr,BrandSummary.class);
+        // 设置当前操作人品牌id为此品牌id
+        brandSummary.setBrandId(brandId);
         // a.验证基础信息必填字段是否为空
         Map checkMap= iBrandSummaryService.checkBeanIsNull(brandSummary);
         if (!"true".equals(checkMap.get("status") + "")) {
@@ -84,14 +86,13 @@ public class BrandSummaryController extends BaseController {
         if (!"true".equals(checkMap.get("status") + "")) {
             return  ResultView.error(checkMap.get("memo") + "");
         }
-        // 设置当前操作人品牌id为此品牌id
-        brandSummary.setBrandId(brandId);
         // 判断当前用户的brandId是否能查询出数据
         QueryWrapper<BrandSummary> brandSummaryQueryWrapper=new QueryWrapper<>();
         brandSummaryQueryWrapper.lambda().eq(BrandSummary::getBrandId,brandId);
         BrandSummary checkBrandSummary=iBrandSummaryService.getOne(brandSummaryQueryWrapper);
         // 如果传入的id不为空,并且根据品牌
         if(EmptyUtil.isEmpty(brandSummary.getId()) && EmptyUtil.isEmpty(checkBrandSummary)){
+            brandSummary.setId(null);
             // 调用保存接口
             iBrandSummaryService.save(brandSummary);
         }else{
