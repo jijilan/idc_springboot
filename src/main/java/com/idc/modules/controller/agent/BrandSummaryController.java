@@ -86,9 +86,12 @@ public class BrandSummaryController extends BaseController {
         }
         // 设置当前操作人品牌id为此品牌id
         brandSummary.setBrandId(brandId);
-        // 判断传入的id是否为空
-        if(EmptyUtil.isEmpty(brandSummary.getId())){
-
+        // 判断当前用户的brandId是否能查询出数据
+        QueryWrapper<BrandSummary> brandSummaryQueryWrapper=new QueryWrapper<>();
+        brandSummaryQueryWrapper.lambda().eq(BrandSummary::getBrandId,brandId);
+        BrandSummary checkBrandSummary=iBrandSummaryService.getOne(brandSummaryQueryWrapper);
+        // 如果传入的id不为空,并且根据品牌
+        if(EmptyUtil.isEmpty(brandSummary.getId()) && EmptyUtil.isEmpty(checkBrandSummary)){
             // 调用保存接口
             iBrandSummaryService.save(brandSummary);
         }else{
