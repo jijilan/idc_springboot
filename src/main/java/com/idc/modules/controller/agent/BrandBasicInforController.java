@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.idc.common.enums.ResultEnum;
 import com.idc.common.result.ResultView;
+import com.idc.common.result.SysConstant;
 import com.idc.common.utils.EmptyUtil;
 import com.idc.modules.controller.base.BaseController;
 import com.idc.modules.entity.*;
@@ -69,17 +70,16 @@ public class BrandBasicInforController extends BaseController {
 
     //保存品牌制造商、代理商信息
     @PostMapping(value = "/saveBrandBasicInfor")
-    public ResultView saveBrandBasicInfor(String jsonParamStr) {
+    public ResultView saveBrandBasicInfor(String jsonParamStr,HttpServletRequest request) {
         JSONObject jsonParam = JSONObject.parseObject(jsonParamStr);
         String basinforStr = jsonParam.getString("basinfor");
         String brandPersonsStr = jsonParam.getString("brandPersons");
-        String userIdStr = jsonParam.getString("userId");
-        if (EmptyUtil.isEmpty(basinforStr) || EmptyUtil.isEmpty(brandPersonsStr) || EmptyUtil.isEmpty(userIdStr)) {
+        if (EmptyUtil.isEmpty(basinforStr) || EmptyUtil.isEmpty(brandPersonsStr)) {
             return ResultView.error("必要信息不能为空!");
         }
         // 1.保存品牌制造商、代理商基础信息
         BrandBasicInfor brandBasicInfor = JSON.parseObject(basinforStr, BrandBasicInfor.class);
-        int userId = jsonParam.getInteger("userId");
+        int userId =Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");;
 
         // a.验证基础信息必填字段是否为空
         Map checkMap = iBrandBasicInforService.checkBeanIsNull(brandBasicInfor);
@@ -119,13 +119,11 @@ public class BrandBasicInforController extends BaseController {
         JSONObject jsonParam = JSONObject.parseObject(jsonParamStr);
         String basinforStr = jsonParam.getString("basinfor");
         String brandPersonsStr = jsonParam.getString("brandPersons");
-        String userIdStr = jsonParam.getString("userId");
-        if (EmptyUtil.isEmpty(basinforStr) || EmptyUtil.isEmpty(brandPersonsStr) || EmptyUtil.isEmpty(userIdStr)) {
+        if (EmptyUtil.isEmpty(basinforStr) || EmptyUtil.isEmpty(brandPersonsStr)) {
             return ResultView.error("必要信息不能为空!");
         }
         // 1.保存品牌制造商、代理商基础信息
         BrandBasicInfor brandBasicInfor = JSON.parseObject(basinforStr, BrandBasicInfor.class);
-        int userId = jsonParam.getInteger("userId");
 
         // a.验证基础信息必填字段是否为空
         Map checkMap = iBrandBasicInforService.checkBeanIsNull(brandBasicInfor);
@@ -151,7 +149,8 @@ public class BrandBasicInforController extends BaseController {
     }
 
     @PostMapping(value = "/getBrandBasicInfor")
-    public ResultView getBrandBasicInfor(@NotNull(message = "用户id不能为空") int userId, @NotNull(message = "品牌商类型不能为空") int cType) {
+    public ResultView getBrandBasicInfor(@NotNull(message = "品牌商类型不能为空") int cType,HttpServletRequest request) {
+        userId=Integer.parseInt(request.getAttribute(SysConstant.USER_ID)+"");
         Map resMap = new HashMap();
         QueryWrapper<BrandUserRole> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().eq(BrandUserRole::getUserId, userId).eq(BrandUserRole::getCType, cType);
