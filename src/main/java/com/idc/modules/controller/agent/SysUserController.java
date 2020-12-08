@@ -78,6 +78,8 @@ public class SysUserController  extends BaseController {
         SysUser sysUser = iSysUserService.loginByUserName(userName,password);
 
         if (EmptyUtil.isNotEmpty(sysUser)) {
+            // 更新当前用户的最后登陆时间
+            iSysUserService.updateLastLoginTime(sysUser.getId());
             sysUser.setPassWord("");
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);
             Map resMap=new HashMap();
