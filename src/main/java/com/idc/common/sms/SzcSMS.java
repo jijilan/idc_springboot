@@ -50,4 +50,9 @@ public class SzcSMS {
         parMap.put("content",content);
         return HttpUtil.post(szcSmsUrl,parMap);
     }
+
+    public String getMsg(String phoneCode){
+        return "您的验证码是【"+phoneCode+"】，在【3】分钟内有效。如非本人操作请忽略本短信。";
+    }
+
 }

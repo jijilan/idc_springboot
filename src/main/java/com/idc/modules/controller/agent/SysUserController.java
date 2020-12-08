@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.idc.common.redis.RedisService;
 import com.idc.common.result.ResultView;
 import com.idc.common.result.SysConstant;
+import com.idc.common.sms.SzcSMS;
 import com.idc.common.utils.EmptyUtil;
 import com.idc.common.utils.FileUtils;
 import com.idc.common.utils.IdentityUtil;
@@ -53,6 +54,8 @@ public class SysUserController  extends BaseController {
     private FileUtils fileUtils;
     @Autowired
     private RedisService redisService;
+    @Autowired
+    private SzcSMS szcSMS;
 
 
     /**
@@ -233,9 +236,14 @@ public class SysUserController  extends BaseController {
             return ResultView.error("请勿重复获取验证码!");
         }
         phoneCode=IdentityUtil.getRandomNum(6);
-        // 往redis中设置验证码
-        redisService.setAuthorizedSubject(phoneNum+codeTypeStr, phoneCode, 60);
-        return ResultView.ok("发送成功",phoneCode);
+        Map smsMap= JSON.parseObject(szcSMS.sendPhoneCode("18124540214",szcSMS.getMsg(phoneCode)),Map.class);
+        if("1".equals(smsMap.get("result")+"")){
+            // 往redis中设置验证码
+            redisService.setAuthorizedSubject(phoneNum+codeTypeStr, phoneCode, 60*3);
+            return ResultView.ok(smsMap.get("tips"));
+        }else{
+            return ResultView.error(smsMap.get("tips")+"");
+        }
     }
 
     /**
