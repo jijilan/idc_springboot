@@ -62,3 +62,9 @@ web:
   ##二维码地址
   qrCodePath: ${web.projectPath}downloadQr?type=%s&equipmentNo=%s
 
+  ##短信接口地址
+  szcSmsUrl: https://sdk.53api.com/api/webservice
+  smsEprId: 2515
+  smsUserId: szzhcs
+  smsPassword: Szzhcs2515
+

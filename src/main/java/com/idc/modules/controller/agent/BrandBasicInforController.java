@@ -199,7 +199,7 @@ public class BrandBasicInforController extends BaseController {
         QueryWrapper<BrandBasRevPerf> brandBasRevPerfQueryWrapper = new QueryWrapper<>();
         brandBasRevPerfQueryWrapper.lambda().eq(BrandBasRevPerf::getBrandId, brandId);
         BrandBasRevPerf brandBasRevPerf=iBrandBasRevPerfService.getOne(brandBasRevPerfQueryWrapper);
-        if(EmptyUtil.isEmpty(brandBasRevPerf.getYingyezz())){
+        if(EmptyUtil.isEmpty(brandBasRevPerf) || EmptyUtil.isEmpty(brandBasRevPerf.getYingyezz())){
             return ResultView.error(24,"证明材料 1(基本信息证明）为空！");
         }
         if(EmptyUtil.isEmpty(brandBasRevPerf.getYingysrOne())){
@@ -231,7 +231,7 @@ public class BrandBasicInforController extends BaseController {
         QueryWrapper<BrandBasPatent> brandBasPatentQueryWrapper = new QueryWrapper<>();
         brandBasPatentQueryWrapper.lambda().eq(BrandBasPatent::getBrandId, brandId);
         BrandBasPatent brandBasPatent=iBrandBasPatentService.getOne(brandBasPatentQueryWrapper);
-        if(EmptyUtil.isEmpty(brandBasCreQua.getSczyl())){
+        if(EmptyUtil.isEmpty(brandBasPatent)){
             return ResultView.error(24,"证明材料 9(拟入库品牌产品相关的专利证书提供专利复印件）为空！");
         }
         // 6.brand_bas_awarded	证明材料10.拟入库品牌产品获奖情况
