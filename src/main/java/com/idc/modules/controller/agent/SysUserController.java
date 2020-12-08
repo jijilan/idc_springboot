@@ -13,7 +13,9 @@ import com.idc.common.utils.FileUtils;
 import com.idc.common.utils.IdentityUtil;
 import com.idc.common.utils.MD5Util;
 import com.idc.modules.controller.base.BaseController;
+import com.idc.modules.entity.SmsLogs;
 import com.idc.modules.entity.SysUser;
+import com.idc.modules.service.ISmsLogsService;
 import com.idc.modules.service.ISysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
@@ -32,6 +34,7 @@ import javax.validation.constraints.NotBlank;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +59,8 @@ public class SysUserController  extends BaseController {
     private RedisService redisService;
     @Autowired
     private SzcSMS szcSMS;
-
+    @Autowired
+    private ISmsLogsService iSmsLogsService;
 
     /**
      * 登录接口
@@ -199,7 +203,7 @@ public class SysUserController  extends BaseController {
      * @return
      */
     @PostMapping(value = "/sendPhoneCode")
-    public ResultView sendPhoneCode(@NotBlank(message = "手机号不能为空") @Length(min = 11, max = 11, message = "手机号长度必须为11位") String phoneNum,@NotBlank(message = "验证码类型不能为空！")String codeType) {
+    public ResultView sendPhoneCode(@NotBlank(message = "手机号不能为空") @Length(min = 11, max = 11, message = "手机号长度必须为11位") String phoneNum,@NotBlank(message = "验证码类型不能为空！")String codeType,HttpServletRequest request) {
         String codeTypeStr="";
         if(codeType.equals("1")){
             // 注册
@@ -241,7 +245,16 @@ public class SysUserController  extends BaseController {
         Map smsMap= JSON.parseObject(szcSMS.sendPhoneCode(phoneNum,szcSMS.getMsg(phoneCode)),Map.class);
         if("1".equals(smsMap.get("result")+"")){
             // 往redis中设置验证码
-            redisService.setAuthorizedSubject(phoneNum+codeTypeStr, phoneCode, 60*3);
+            redisService.setAuthorizedSubject(phoneNum+codeTypeStr, phoneCode, 3*60);
+            /** 插入发送短信的记录**/
+            SmsLogs smsLogs=new SmsLogs();
+            smsMap.put("code",phoneCode);
+            smsMap.put("type",codeTypeStr);
+            smsLogs.setPhoneCode(JSON.toJSONString(smsMap));
+            smsLogs.setPhoneNum(phoneNum);
+            smsLogs.setReqIp(request.getRemoteAddr());
+            smsLogs.setSendTime(new Date());
+            iSmsLogsService.save(smsLogs);
             return ResultView.ok(smsMap.get("tips"));
         }else{
             return ResultView.error(smsMap.get("tips")+"");
