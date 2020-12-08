@@ -236,7 +236,7 @@ public class SysUserController  extends BaseController {
             return ResultView.error("请勿重复获取验证码!");
         }
         phoneCode=IdentityUtil.getRandomNum(6);
-        Map smsMap= JSON.parseObject(szcSMS.sendPhoneCode("18124540214",szcSMS.getMsg(phoneCode)),Map.class);
+        Map smsMap= JSON.parseObject(szcSMS.sendPhoneCode(phoneNum,szcSMS.getMsg(phoneCode)),Map.class);
         if("1".equals(smsMap.get("result")+"")){
             // 往redis中设置验证码
             redisService.setAuthorizedSubject(phoneNum+codeTypeStr, phoneCode, 60*3);
