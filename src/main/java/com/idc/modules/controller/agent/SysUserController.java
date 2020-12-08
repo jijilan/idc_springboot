@@ -239,7 +239,7 @@ public class SysUserController  extends BaseController {
         }
         String phoneCode=redisService.getAuthorizedSubject(phoneNum+codeTypeStr)+"";
         if(EmptyUtil.isNotEmpty(phoneCode)){
-            return ResultView.error("请勿重复获取验证码!");
+            return ResultView.error("获取验证码频繁，请3分钟后重新获取!");
         }
         phoneCode=IdentityUtil.getRandomNum(6);
         Map smsMap= JSON.parseObject(szcSMS.sendPhoneCode(phoneNum,szcSMS.getMsg(phoneCode)),Map.class);
