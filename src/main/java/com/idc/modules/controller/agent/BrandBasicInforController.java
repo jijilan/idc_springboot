@@ -288,9 +288,9 @@ public class BrandBasicInforController extends BaseController {
         int brandId=getBrandId(request,"1");
         BrandBasicInfor brandBasicInfor = iBrandBasicInforService.getById(brandId);
         if(brandBasicInfor.getComplete()==0){
-            return ResultView.error(24,"当前信息未完成申报！");
+            return ResultView.ok(0);
         }
-        return ResultView.ok();
+        return ResultView.ok(1);
     }
 
 
