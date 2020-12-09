@@ -1,0 +1,17 @@
+package com.idc.modules.controller.agent;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * @Auther Dyaln
+ * @Date 2020/12/9
+ */
+
+public class BackStageController {
+    /**
+     * 列表查询
+     */
+}

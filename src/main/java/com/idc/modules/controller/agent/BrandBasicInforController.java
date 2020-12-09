@@ -286,8 +286,11 @@ public class BrandBasicInforController extends BaseController {
     public ResultView checkBrandInforIsOk( HttpServletRequest request) {
         // 下面的信息全部检查品牌商的信息
         int brandId=getBrandId(request,"1");
+        if(brandId==0){
+            return ResultView.ok(0);
+        }
         BrandBasicInfor brandBasicInfor = iBrandBasicInforService.getById(brandId);
-        if(brandBasicInfor.getComplete()==0){
+        if(EmptyUtil.isEmpty(brandBasicInfor) || brandBasicInfor.getComplete()==0){
             return ResultView.ok(0);
         }
         return ResultView.ok(1);
