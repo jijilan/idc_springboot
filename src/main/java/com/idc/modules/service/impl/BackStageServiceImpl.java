@@ -1,10 +1,12 @@
 package com.idc.modules.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.idc.modules.mapper.BackStageMapper;
 import com.idc.modules.model.QPage;
 import com.idc.modules.service.IBackStageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -15,10 +17,12 @@ import java.util.Map;
  */
 @Service
 public class BackStageServiceImpl implements IBackStageService {
-
+    @Autowired
+    private BackStageMapper backStageMapper;
     @Override
     public IPage<Map> selectBrandPage(QPage qPage, Map paraMap) {
-
-        return null;
+        IPage ipage = new Page(qPage.getOffset(), qPage.getLimit());
+        ipage.setRecords(backStageMapper.selectBrandPage(ipage, paraMap));
+        return ipage;
     }
 }
