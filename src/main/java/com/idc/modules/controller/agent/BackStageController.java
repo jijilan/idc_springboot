@@ -2,6 +2,7 @@ package com.idc.modules.controller.agent;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.idc.common.result.ResultView;
+import com.idc.common.utils.EmptyUtil;
 import com.idc.modules.controller.base.BaseController;
 import com.idc.modules.model.QPage;
 import com.idc.modules.service.IBackStageService;
@@ -30,6 +31,8 @@ public class BackStageController extends BaseController {
     private IBackStageService iBackStageService;
     /**
      * 填报管理-条件查询
+     * @param offset 当前页数
+     * @param limit 每页条数
      * @param qiylx 申报企业类型
      * @param shenbqy 申报企业名称
      * @param qiyxz 企业性质
@@ -38,8 +41,12 @@ public class BackStageController extends BaseController {
      * @return
      */
     @PostMapping(value = "/getBrandInforListByPage")
-    public ResultView getBrandInforListByPage(String qiylx,String shenbqy,String qiyxz,String sbzt,HttpServletRequest request) {
+    public ResultView getBrandInforListByPage(String qiylx,String shenbqy,String qiyxz,String sbzt,int offset,int limit,HttpServletRequest request) {
         QPage qPage=new QPage();
+        if(EmptyUtil.isNotEmpty(offset) && EmptyUtil.isNotEmpty(limit)){
+            qPage.setLimit(limit);
+            qPage.setOffset(offset);
+        }
         Map parMap=new HashMap<>();
         parMap.put("qiylx",qiylx);
         parMap.put("shenbqy",shenbqy);

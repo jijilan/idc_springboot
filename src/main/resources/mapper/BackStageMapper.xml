@@ -3,14 +3,25 @@
 <mapper namespace="com.idc.modules.mapper.BackStageMapper">
     <!--查询该人员的品牌证照信息列表 -->
     <select id="selectBrandPage" parameterType="java.util.Map" resultType="java.util.Map">
-       select tab_bas.id,tab_type.c_name,tab_bas.brand_name,tab_dic.name as qyxz_name,tab_bas.chanpmc
+       select tab_bas.id,tab_type.c_name,tab_bas.brand_name,tab_dic.name as qyxz_name,tab_bas.chanpmc,tab_per.p_name
         ,case when tab_bas.complete =0 then '申报中' else '已完成' end as complete,DATE_FORMAT(tab_bas.add_time,'%Y-%m-%d %H:%i:%s') as add_time from brand_basic_infor tab_bas,company_type as tab_type,(select * from brand_dictionary where p_code='A') as tab_dic
+        ,brand_person tab_per
         where tab_bas.id in (
             select brand_id from sys_user tab_a,brand_user_role tab_b where tab_a.id=tab_b.user_id and tab_a.c_type=tab_b.c_type
         )
+        and tab_per.p_type=1 and tab_per.brand_id=tab_bas.id
         and tab_bas.c_type=tab_type.c_type and tab_bas.gongsixz=tab_dic.code
         <if test="paraMap.shenbqy != null and paraMap.shenbqy !=''">
             AND tab_bas.brand_name LIKE CONCAT('%',#{paraMap.shenbqy},'%')
+        </if>
+        <if test="paraMap.qiylx != null and paraMap.qiylx !=''">
+            and tab_bas.c_type=#{paraMap.qiylx}
+        </if>
+        <if test="paraMap.qiyxz != null and paraMap.qiyxz !=''">
+            and tab_bas.gongsixz=#{paraMap.qiyxz}
+        </if>
+        <if test="paraMap.sbzt != null and paraMap.sbzt !=''">
+            and tab_bas.complete=#{paraMap.sbzt}
         </if>
         order by tab_bas.add_time
     </select>
