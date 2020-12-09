@@ -9,8 +9,8 @@
             select brand_id from sys_user tab_a,brand_user_role tab_b where tab_a.id=tab_b.user_id and tab_a.c_type=tab_b.c_type
         )
         and tab_bas.c_type=tab_type.c_type and tab_bas.gongsixz=tab_dic.code
-        <if test="paraMap.brandName != null and paraMap.brandName !=''">
-            AND tab_bas.brand_name LIKE CONCAT('%',#{paraMap.brandName},'%')
+        <if test="paraMap.shenbqy != null and paraMap.shenbqy !=''">
+            AND tab_bas.brand_name LIKE CONCAT('%',#{paraMap.shenbqy},'%')
         </if>
         order by tab_bas.add_time
     </select>

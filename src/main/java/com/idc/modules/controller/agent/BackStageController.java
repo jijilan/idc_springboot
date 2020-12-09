@@ -41,7 +41,10 @@ public class BackStageController extends BaseController {
     public ResultView getBrandInforListByPage(String qiylx,String shenbqy,String qiyxz,String sbzt,HttpServletRequest request) {
         QPage qPage=new QPage();
         Map parMap=new HashMap<>();
-        parMap.put("brandName",shenbqy);
+        parMap.put("qiylx",qiylx);
+        parMap.put("shenbqy",shenbqy);
+        parMap.put("qiyxz",qiyxz);
+        parMap.put("sbzt",sbzt);
         IPage ipage= iBackStageService.selectBrandPage(qPage,parMap);
         return ResultView.ok(ipage);
     }
