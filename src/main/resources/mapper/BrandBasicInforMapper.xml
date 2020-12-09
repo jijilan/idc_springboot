@@ -4,7 +4,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, c_type, brand_name, zhucezijin, zhucesjzijin, gongsixz, pinpaidz, chanpscdz, zhuycp, cailliaolb, cailiaolb_json, chanpmc, pinplogo, chuanzhm, dailppzzsmc, pinpyyzz, pinpzzjgdmz, pinpswdjz, pinpsanzyyzz, pinpsannwszm,chengns, add_time, update_time
+        id, c_type, brand_name, zhucezijin, zhucesjzijin, gongsixz, pinpaidz, chanpscdz, zhuycp, cailliaolb, cailiaolb_json, chanpmc, pinplogo, chuanzhm, dailppzzsmc, pinpyyzz, pinpzzjgdmz, pinpswdjz, pinpsanzyyzz, pinpsannwszm,chengns,complete, add_time, update_time
     </sql>
 
 </mapper>

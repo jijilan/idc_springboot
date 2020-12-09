@@ -36,6 +36,8 @@ public class BrandBasicInforServiceImpl extends ServiceImpl<BrandBasicInforMappe
         ignoreList.add("chuanzhm");
         // 申报材料真实性承诺书
         ignoreList.add("chengns");
+        // 是否已完成申报
+        ignoreList.add("complete");
         Map checkMap=new HashMap();
         checkMap=BeanCheckUtils.checkObject(brandBasicInfor,ignoreList,checkInfor);
         return checkMap;
@@ -49,6 +51,8 @@ public class BrandBasicInforServiceImpl extends ServiceImpl<BrandBasicInforMappe
         ignoreList.add("chuanzhm");
         // 申报材料真实性承诺书
         ignoreList.add("chengns");
+        // 是否已完成申报
+        ignoreList.add("complete");
         Map checkMap=new HashMap();
         checkMap=BeanCheckUtils.checkObject(brandBasicInfor,ignoreList,checkInfor);
         return checkMap;

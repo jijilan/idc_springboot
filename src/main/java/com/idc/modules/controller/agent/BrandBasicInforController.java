@@ -168,10 +168,9 @@ public class BrandBasicInforController extends BaseController {
         return ResultView.ok(resMap);
 
     }
-    @PostMapping(value = "/checkBrandInforIsOk")
-    public ResultView checkBrandInforIsOk( HttpServletRequest request) {
+    @PostMapping(value = "/setBrandInforIsOk")
+    public ResultView setBrandInforIsOk( HttpServletRequest request) {
         // 基础信息和承诺书使用自身的品牌代理商id，其他证明材料全使用品牌制造商的id
-
         // 获取当前用户自身的品牌id
         int brandIdSelf=getBrandIdByUser(request);
         // 下面的信息全部检查品牌商的信息
@@ -274,10 +273,26 @@ public class BrandBasicInforController extends BaseController {
         if(EmptyUtil.isEmpty(brandBasicInfor.getChengns())){
             return ResultView.error(24,"证明材料 17(申办材料真实性承诺书）为空！");
         }
-
-
+        // 将当前品牌代理商id和品牌制造商id置为完成填报状态
+        UpdateWrapper<BrandBasicInfor> brandBasicInforUpdateWrapper = new UpdateWrapper<>();
+        List<Integer> brandIds=new ArrayList<>();
+        brandIds.add(brandId);
+        brandIds.add(brandIdSelf);
+        brandBasicInforUpdateWrapper.lambda().in(BrandBasicInfor::getId,brandIds).set(BrandBasicInfor::getComplete,1);
+        iBrandBasicInforService.update(new BrandBasicInfor(),brandBasicInforUpdateWrapper);
         return ResultView.ok();
     }
+    @PostMapping(value = "/checkBrandInforIsOk")
+    public ResultView checkBrandInforIsOk( HttpServletRequest request) {
+        // 下面的信息全部检查品牌商的信息
+        int brandId=getBrandId(request,"1");
+        BrandBasicInfor brandBasicInfor = iBrandBasicInforService.getById(brandId);
+        if(brandBasicInfor.getComplete()==0){
+            return ResultView.error(24,"当前信息未完成申报！");
+        }
+        return ResultView.ok();
+    }
+
 
 
 }
