@@ -76,6 +76,11 @@ public class BrandBasRevPerf extends Model<BrandBasRevPerf> {
     private String dailssqzmcl;
 
     /**
+     * 1.企业成立年限
+     */
+    @JsonProperty("企业成立年限")
+    private int chenglnx;
+    /**
      * 2.营业收入(上一年)
      */
     @JsonProperty("营业收入(上一年)")
