@@ -54,16 +54,11 @@ public class SysManagerServiceImpl extends ServiceImpl<SysManagerMapper, SysMana
         QueryWrapper<SysManager> qw = new QueryWrapper<>();
         qw.lambda().eq(SysManager::getUserAcount, userAccount);
         SysManager manager = getOne(qw);
-//        if (manager == null) {
-//            throw new MyException(ResultEnum.CODE_14);
-//        }
-//        if (!DESCode.encode(userPassword).equals(manager.getPassWord())) {
-//            throw new MyException(ResultEnum.CODE_15);
-//        }
-        //该管理员的权限集合
-        List<String> authorityList = iSysMenuService.getAuthoritysByManager(manager.getManagerId());
-        if (authorityList != null && authorityList.size() > 0) {
-            redisService.set(SysConstant.AUTHORITY + manager.getManagerId(), authorityList);
+        if (manager == null) {
+            throw new MyException(ResultEnum.CODE_14);
+        }
+        if (!DESCode.encode(userPassword).equals(manager.getPassWord())) {
+            throw new MyException(ResultEnum.CODE_15);
         }
         return manager;
     }
