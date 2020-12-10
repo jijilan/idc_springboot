@@ -91,7 +91,7 @@ public class ExcelUtil {
      * @author jijl
      * @date 2020/9/18 15:33
      */
-    private static void defaultExport(List<?> list, Class<?> pojoClass, String fileName, HttpServletResponse response, ExportParams exportParams) {
+    public static void defaultExport(List<?> list, Class<?> pojoClass, String fileName, HttpServletResponse response, ExportParams exportParams) {
         Workbook workbook = ExcelExportUtil.exportExcel(exportParams, pojoClass, list);
         if (workbook != null) {
             downLoadExcel(fileName, response, workbook);
@@ -113,6 +113,7 @@ public class ExcelUtil {
             response.setCharacterEncoding("UTF-8");
             response.setHeader("content-Type", "application/vnd.ms-excel");
             response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
+//            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
             workbook.write(response.getOutputStream());
         } catch (IOException e) {
             throw new RuntimeException(e);

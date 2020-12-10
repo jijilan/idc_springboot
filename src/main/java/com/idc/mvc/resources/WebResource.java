@@ -27,4 +27,13 @@ public class WebResource {
     private String projectPath;
 
     private String qrCodePath;
+    // 短信api接口地址
+    private String szcSmsUrl;
+
+    // 短信企业id
+    private String smsEprId;
+    // 短信用户id
+    private String smsUserId;
+    // 短信用户密码
+    private String smsPassword;
 }

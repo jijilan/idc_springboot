@@ -168,10 +168,9 @@ public class BrandBasicInforController extends BaseController {
         return ResultView.ok(resMap);
 
     }
-    @PostMapping(value = "/checkBrandInforIsOk")
-    public ResultView checkBrandInforIsOk( HttpServletRequest request) {
+    @PostMapping(value = "/setBrandInforIsOk")
+    public ResultView setBrandInforIsOk( HttpServletRequest request) {
         // 基础信息和承诺书使用自身的品牌代理商id，其他证明材料全使用品牌制造商的id
-
         // 获取当前用户自身的品牌id
         int brandIdSelf=getBrandIdByUser(request);
         // 下面的信息全部检查品牌商的信息
@@ -199,7 +198,7 @@ public class BrandBasicInforController extends BaseController {
         QueryWrapper<BrandBasRevPerf> brandBasRevPerfQueryWrapper = new QueryWrapper<>();
         brandBasRevPerfQueryWrapper.lambda().eq(BrandBasRevPerf::getBrandId, brandId);
         BrandBasRevPerf brandBasRevPerf=iBrandBasRevPerfService.getOne(brandBasRevPerfQueryWrapper);
-        if(EmptyUtil.isEmpty(brandBasRevPerf.getYingyezz())){
+        if(EmptyUtil.isEmpty(brandBasRevPerf) || EmptyUtil.isEmpty(brandBasRevPerf.getYingyezz())){
             return ResultView.error(24,"证明材料 1(基本信息证明）为空！");
         }
         if(EmptyUtil.isEmpty(brandBasRevPerf.getYingysrOne())){
@@ -231,7 +230,7 @@ public class BrandBasicInforController extends BaseController {
         QueryWrapper<BrandBasPatent> brandBasPatentQueryWrapper = new QueryWrapper<>();
         brandBasPatentQueryWrapper.lambda().eq(BrandBasPatent::getBrandId, brandId);
         BrandBasPatent brandBasPatent=iBrandBasPatentService.getOne(brandBasPatentQueryWrapper);
-        if(EmptyUtil.isEmpty(brandBasCreQua.getSczyl())){
+        if(EmptyUtil.isEmpty(brandBasPatent)){
             return ResultView.error(24,"证明材料 9(拟入库品牌产品相关的专利证书提供专利复印件）为空！");
         }
         // 6.brand_bas_awarded	证明材料10.拟入库品牌产品获奖情况
@@ -274,10 +273,29 @@ public class BrandBasicInforController extends BaseController {
         if(EmptyUtil.isEmpty(brandBasicInfor.getChengns())){
             return ResultView.error(24,"证明材料 17(申办材料真实性承诺书）为空！");
         }
-
-
+        // 将当前品牌代理商id和品牌制造商id置为完成填报状态
+        UpdateWrapper<BrandBasicInfor> brandBasicInforUpdateWrapper = new UpdateWrapper<>();
+        List<Integer> brandIds=new ArrayList<>();
+        brandIds.add(brandId);
+        brandIds.add(brandIdSelf);
+        brandBasicInforUpdateWrapper.lambda().in(BrandBasicInfor::getId,brandIds).set(BrandBasicInfor::getComplete,1);
+        iBrandBasicInforService.update(new BrandBasicInfor(),brandBasicInforUpdateWrapper);
         return ResultView.ok();
     }
+    @PostMapping(value = "/checkBrandInforIsOk")
+    public ResultView checkBrandInforIsOk( HttpServletRequest request) {
+        // 下面的信息全部检查品牌商的信息
+        int brandId=getBrandId(request,"1");
+        if(brandId==0){
+            return ResultView.ok(0);
+        }
+        BrandBasicInfor brandBasicInfor = iBrandBasicInforService.getById(brandId);
+        if(EmptyUtil.isEmpty(brandBasicInfor) || brandBasicInfor.getComplete()==0){
+            return ResultView.ok(0);
+        }
+        return ResultView.ok(1);
+    }
+
 
 
 }

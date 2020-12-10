@@ -1,6 +1,8 @@
 package com.idc.modules.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import java.util.Date;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -112,6 +114,7 @@ public class BrandBasicInfor extends Model<BrandBasicInfor> {
      * 公司传值号码
      */
     @JsonProperty("公司传值号码")
+    @TableField(strategy = FieldStrategy.NOT_NULL)
     private String chuanzhm;
 
     /**
@@ -153,6 +156,8 @@ public class BrandBasicInfor extends Model<BrandBasicInfor> {
     @JsonProperty("申报材料真实性承诺书")
     private String chengns;
 
+    @JsonProperty("是否已完成申报: 0 申报中,1 已完成")
+    private int complete;
     /**
      * 添加时间
      */

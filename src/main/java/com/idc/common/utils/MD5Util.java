@@ -165,6 +165,14 @@ public class MD5Util {
 		}
 		return paramData;
 	}
+	public static String getMd5CodeNo(String paramData){
+		try {
+			paramData= DigestUtils.md5DigestAsHex((paramData).getBytes("utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		return paramData;
+	}
 	public static void main(String[] args) {
 		System.out.println("加密："+getMd5Code("Aa123456"));
 		System.out.println("解密："+decCode("nfDlLAgAWEg="));

@@ -48,7 +48,7 @@ public class BrandBasRevPerfController  extends BaseController {
     @Autowired
     private IBrandUserRoleService iBrandUserRoleService;
     /**
-     * 保存公司基本信息证明
+     * 1.证明材料1-保存公司基本信息证明
      * @param request
      * @return
      */
@@ -68,6 +68,7 @@ public class BrandBasRevPerfController  extends BaseController {
         checkFields.add("yingyezzfb");
         checkFields.add("zhuczjsjzm");
         checkFields.add("zuzjgdm");
+        checkFields.add("chenglnx");
         checkFields.add("shuiwdjz");
         Map checkMap= iBrandBasRevPerfService.checkBeanIsNull(brandBasRevPerf,checkFields);
         if (!"true".equals(checkMap.get("status") + "")) {
@@ -128,7 +129,7 @@ public class BrandBasRevPerfController  extends BaseController {
     }
 
     /**
-     * 近三年营收情况
+     * 证明材料2-近三年营收情况
      * @param jsonStr 制造商
      * @param jsonStrBac 代理商信息
      * @param request
@@ -187,7 +188,7 @@ public class BrandBasRevPerfController  extends BaseController {
     }
 
     /**
-     * 履约评价情况
+     * 证明材料5-履约评价情况
      * @param jsonStr
      * @param jsonStrBac
      * @param request

@@ -65,7 +65,7 @@ public class BrandBasAftersale extends Model<BrandBasAftersale> {
      * 13.免费维保期-免费维保期
      */
     @JsonProperty("免费维保期")
-    private Integer mfwbq;
+    private String mfwbq;
 
     /**
      * 13.免费维保期-佐证材料

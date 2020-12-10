@@ -32,6 +32,12 @@ public class BrandBasicInforServiceImpl extends ServiceImpl<BrandBasicInforMappe
     public Map checkBeanIsNull(BrandBasicInfor brandBasicInfor, List<String> ignoreList) {
         // 代理品牌的品牌制造商名称
         ignoreList.add("dailppzzsmc");
+        // 传真号码为空
+        ignoreList.add("chuanzhm");
+        // 申报材料真实性承诺书
+        ignoreList.add("chengns");
+        // 是否已完成申报
+        ignoreList.add("complete");
         Map checkMap=new HashMap();
         checkMap=BeanCheckUtils.checkObject(brandBasicInfor,ignoreList,checkInfor);
         return checkMap;
@@ -41,8 +47,12 @@ public class BrandBasicInforServiceImpl extends ServiceImpl<BrandBasicInforMappe
         List<String> ignoreList=new ArrayList<>();
         // 代理品牌的品牌制造商名称
         ignoreList.add("dailppzzsmc");
+        // 传真号码为空
+        ignoreList.add("chuanzhm");
         // 申报材料真实性承诺书
         ignoreList.add("chengns");
+        // 是否已完成申报
+        ignoreList.add("complete");
         Map checkMap=new HashMap();
         checkMap=BeanCheckUtils.checkObject(brandBasicInfor,ignoreList,checkInfor);
         return checkMap;
