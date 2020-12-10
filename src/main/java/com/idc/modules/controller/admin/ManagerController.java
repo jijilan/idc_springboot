@@ -10,6 +10,7 @@ import com.idc.common.enums.ResultEnum;
 import com.idc.common.result.ResultView;
 import com.idc.common.result.SysConstant;
 import com.idc.common.utils.DESCode;
+import com.idc.common.utils.EmptyUtil;
 import com.idc.common.utils.IdentityUtil;
 import com.idc.modules.controller.base.BaseController;
 import com.idc.modules.entity.SysManager;
@@ -76,8 +77,12 @@ public class ManagerController extends BaseController {
     @PostMapping(value = "/login")
     public ResultView login(@NotBlank(message = "用户名不能为空") String userAccount,
                             @NotBlank(message = "密码不能为空")
-                            @Length(min = 4, max = 20, message = "密码须在长度4-20位之间") String userPassword) {
-        monitorLogger.info("hello!");
+                            @Length(min = 4, max = 20, message = "密码须在长度4-20位之间") String userPassword,@NotBlank(message = "验证码不能为空")String verCode,HttpServletRequest request) {
+        // 验证码是否正确
+        String imgCode=request.getSession().getAttribute("imgCode")+"";
+        if(EmptyUtil.isEmpty(imgCode) || !verCode.equals(imgCode)){
+            return ResultView.error("验证码错误!");
+        }
         SysManager manager = iSysManagerService.login(userAccount, userPassword);
         String token = jwtToken(SysConstant.MANAGER_ID, manager.getManagerId(), manager, SysConstant.ADMIN_AUTH_TIMEOUT);
         return ResultView.ok(token);
