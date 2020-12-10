@@ -58,7 +58,6 @@ public class DateUtils {
         datestr = df.format(new Date());
         return datestr;
     }
-
     /**
      * 获取当前日期时间
      *

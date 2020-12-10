@@ -1,9 +1,13 @@
 package com.idc.modules.controller.agent;
 
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.idc.common.result.ResultView;
+import com.idc.common.utils.DateUtils;
 import com.idc.common.utils.EmptyUtil;
+import com.idc.common.utils.ExcelUtil;
 import com.idc.modules.controller.base.BaseController;
+import com.idc.modules.entity.excle.BrandInforListExcle;
 import com.idc.modules.model.QPage;
 import com.idc.modules.service.IBackStageService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +18,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -55,5 +61,16 @@ public class BackStageController extends BaseController {
         IPage ipage= iBackStageService.selectBrandPage(qPage,parMap);
         return ResultView.ok(ipage);
     }
+    @PostMapping(value = "/exportBrandInforListByPage")
+    public void exportBrandInforListByPage(String qiylx, String shenbqy, String qiyxz, String sbzt, HttpServletRequest request, HttpServletResponse response) {
+        Map parMap=new HashMap<>();
+        parMap.put("qiylx",qiylx);
+        parMap.put("shenbqy",shenbqy);
+        parMap.put("qiyxz",qiyxz);
+        parMap.put("sbzt",sbzt);
+        List<BrandInforListExcle> brandInforListExcles = iBackStageService.selectBrandPage(parMap);
+        ExcelUtil.defaultExport(brandInforListExcles,BrandInforListExcle.class, DateUtils.getCurrentDateTime(DateUtils.DATE_TIME_FORMAT_UNSIGNED) +".xls",response,new ExportParams());
+    }
+
 
 }
