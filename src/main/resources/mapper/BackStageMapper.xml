@@ -25,5 +25,14 @@
         </if>
         order by tab_bas.add_time
     </select>
+    <select id="getBrandManuId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select coalesce(brand_id,0) as brand_id from brand_user_role where user_id in (select user_id from brand_user_role where brand_id=#{id}) and c_type=1
+    </select>
+
+    <select id="getSummaryNum" resultType="com.idc.modules.entity.excle.BrandCountExcle">
+        select sum(case when c_type=1 then 1 else 0 end) as macNum,sum(case when c_type=1 then 1 else 0 end) as agentNum,sum(1) as num from brand_basic_infor tab_bas
+        where tab_bas.id in ( select brand_id from sys_user tab_a,brand_user_role tab_b where tab_a.id=tab_b.user_id and tab_a.c_type=tab_b.c_type)
+    </select>
+
 
 </mapper>
