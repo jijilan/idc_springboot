@@ -35,12 +35,12 @@ public class SysConstant {
     /**
      * 用户登录过期时间
      */
-    public static final long USER_AUTH_TIMEOUT = 604800000;
+    public static final long USER_AUTH_TIMEOUT = 3*60*60*1000;
 
     /**
-     * 管理员授权过期时间
+     * 管理员授权过期时间 3个小时
      */
-    public static final long ADMIN_AUTH_TIMEOUT = 259200000;
+    public static final long ADMIN_AUTH_TIMEOUT = 3*60*60*1000;
 
 
     public static final String EQUIPMENT_DOOR = "0";

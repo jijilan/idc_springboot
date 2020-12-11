@@ -12,6 +12,7 @@ import com.idc.modules.entity.BrandBasicInfor;
 import com.idc.modules.entity.BrandPerson;
 import com.idc.modules.entity.excle.BrandCountExcle;
 import com.idc.modules.entity.excle.BrandInforListExcle;
+import com.idc.modules.entity.excle.EnterpriseInforExcle;
 import com.idc.modules.model.QPage;
 import com.idc.modules.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,7 @@ public class BackStageController extends BaseController {
      * @return
      */
     @PostMapping(value = "/getBrandInforListByPage")
-    public ResultView getBrandInforListByPage(String qiylx,String shenbqy,String qiyxz,String sbzt,int offset,int limit,HttpServletRequest request) {
+    public ResultView getBrandInforListByPage(String qiylx,String shenbqy,String qiyxz,String sbzt,Integer offset,Integer limit,HttpServletRequest request) {
         QPage qPage=new QPage();
         if(EmptyUtil.isNotEmpty(offset) && EmptyUtil.isNotEmpty(limit)){
             qPage.setLimit(limit);
@@ -125,8 +126,8 @@ public class BackStageController extends BaseController {
      * @return
      */
     @PostMapping(value = "/getSummaryNum")
-    public ResultView getSummaryNum(HttpServletRequest request) {
-        BrandCountExcle brandCountExcle=iBackStageService.getSummaryNum();
+    public ResultView getSummaryNum(HttpServletRequest request,String beginDate,String endDate) {
+        BrandCountExcle brandCountExcle=iBackStageService.getSummaryNum(beginDate,endDate);
         return ResultView.ok(brandCountExcle);
     }
     /**
@@ -135,11 +136,45 @@ public class BackStageController extends BaseController {
      * @return
      */
     @PostMapping(value = "/exportSummaryNum")
-    public void exportSummaryNum(HttpServletRequest request, HttpServletResponse response) {
-        BrandCountExcle brandCountExcle=iBackStageService.getSummaryNum();
+    public void exportSummaryNum(HttpServletRequest request, HttpServletResponse response,String beginDate,String endDate) {
+        BrandCountExcle brandCountExcle=iBackStageService.getSummaryNum(beginDate,endDate);
         List<BrandCountExcle> brandInforListExcles = new ArrayList<>();
         brandInforListExcles.add(brandCountExcle);
         ExcelUtil.defaultExport(brandInforListExcles,BrandCountExcle.class, DateUtils.getCurrentDateTime(DateUtils.DATE_TIME_FORMAT_UNSIGNED) +".xls",response,new ExportParams());
+    }
+
+    /**
+     *
+     * @param request
+     * @param offset 当前页数 此处使用integer否则会报错
+     * @param limit 每页条数
+     * @param beginDate 开始日期
+     * @param endDate 结束日期
+     * @return
+     */
+    @PostMapping(value = "/getEnterpriseInforList")
+    public ResultView getEnterpriseInforList(HttpServletRequest request,String beginDate,String endDate,Integer offset,Integer limit) {
+        QPage qPage=new QPage();
+        if(EmptyUtil.isNotEmpty(offset) && EmptyUtil.isNotEmpty(limit)){
+            qPage.setLimit(limit);
+            qPage.setOffset(offset);
+        }
+        IPage<Map> enterpriseInforExcles=iBackStageService.getEnterpriseInforList(qPage,beginDate,endDate);
+        return ResultView.ok(enterpriseInforExcles);
+    }
+
+    /**
+     * 统计管理-申报企业信息一览表
+     * @param request
+     * @param response
+     * @param beginDate 开始日期
+     * @param endDate 结束日期
+     * @return
+     */
+    @PostMapping(value = "/exportEnterpriseInforList")
+    public void exportEnterpriseInforList(HttpServletRequest request, HttpServletResponse response,String beginDate,String endDate) {
+        List<EnterpriseInforExcle> enterpriseInforExcles=iBackStageService.getEnterpriseInforList(beginDate,endDate);
+        ExcelUtil.defaultExport(enterpriseInforExcles,EnterpriseInforExcle.class, DateUtils.getCurrentDateTime(DateUtils.DATE_TIME_FORMAT_UNSIGNED) +".xls",response,new ExportParams());
     }
 
 }

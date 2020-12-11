@@ -32,7 +32,45 @@
     <select id="getSummaryNum" resultType="com.idc.modules.entity.excle.BrandCountExcle">
         select sum(case when c_type=1 then 1 else 0 end) as macNum,sum(case when c_type=1 then 1 else 0 end) as agentNum,sum(1) as num from brand_basic_infor tab_bas
         where tab_bas.id in ( select brand_id from sys_user tab_a,brand_user_role tab_b where tab_a.id=tab_b.user_id and tab_a.c_type=tab_b.c_type)
+        <if test="beginDate != null and beginDate !=''">
+            and date(tab_bas.add_time) &gt;= date(#{beginDate})
+        </if>
+        <if test="endDate != null and endDate !=''">
+            and date(tab_bas.add_time) &lt;= date(#{endDate})
+        </if>
     </select>
 
+    <select id="getEnterpriseInforList" resultType="com.idc.modules.entity.excle.EnterpriseInforExcle">
+        SELECT
+            brand_name as brandName,
+            chanpmc,
+            pinpaidz,
+            tab_dic.name as qiyxz,
+            zhucezijin,
+            zhucesjzijin,
+            tab_type.c_name as typeName,
+            tab_per1.p_name as farName,
+            tab_per1.p_phone_num as farPhoneNum,
+            tab_per2.p_name as xiaosName,
+            tab_per2.p_phone_num as xiaosPhoneNum,
+            chanpscdz
+        FROM
+            brand_basic_infor tab_bas,
+            ( SELECT * FROM brand_dictionary WHERE p_code = 'A' ) AS tab_dic,
+            company_type AS tab_type,( SELECT brand_id, p_type, p_name, p_phone_num FROM brand_person WHERE p_type =1 ) AS tab_per1,
+            ( SELECT brand_id, p_type, p_name, p_phone_num FROM brand_person WHERE p_type =2 ) AS tab_per2
+            WHERE
+            tab_bas.id IN ( SELECT brand_id FROM sys_user tab_a, brand_user_role tab_b WHERE tab_a.id = tab_b.user_id AND tab_a.c_type = tab_b.c_type )
+            AND tab_bas.c_type = tab_type.c_type
+            AND tab_bas.gongsixz = tab_dic.CODE
+            AND tab_per1.brand_id = tab_bas.id
+            AND tab_per2.brand_id = tab_bas.id
+            <if test="beginDate != null and beginDate !=''">
+                and date(tab_bas.add_time) &gt;= date(#{beginDate})
+            </if>
+            <if test="endDate != null and endDate !=''">
+                and date(tab_bas.add_time) &lt;= date(#{endDate})
+            </if>
+    </select>
 
 </mapper>
