@@ -38,7 +38,7 @@ import java.util.Map;
  */
 @Slf4j
 @RestController("BackStage")
-@RequestMapping("/api/backStage/agent")
+@RequestMapping("/api/backStage/admin")
 @Validated
 public class BackStageController extends BaseController {
     @Autowired
