@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.idc.modules.entity.excle.BrandCountExcle;
 import com.idc.modules.entity.excle.BrandInforListExcle;
+import com.idc.modules.entity.excle.EnterpriseInforExcle;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -16,5 +17,7 @@ public interface BackStageMapper{
 
     List<BrandInforListExcle> selectBrandPage(@Param("paraMap")Map<String,Object> map);
     int getBrandManuId(@Param("id")int id);
-    BrandCountExcle getSummaryNum();
+    BrandCountExcle getSummaryNum(@Param("beginDate") String beginDate,@Param("endDate")String endDate);
+    List<EnterpriseInforExcle> getEnterpriseInforList(IPage ipage, @Param("beginDate") String beginDate, @Param("endDate")String endDate);
+    List<EnterpriseInforExcle> getEnterpriseInforList( @Param("beginDate") String beginDate, @Param("endDate")String endDate);
 }
