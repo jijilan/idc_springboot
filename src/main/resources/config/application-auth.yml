@@ -2,7 +2,7 @@
 interceptor:
   front-authentication:
     addPathPatterns: /api/*/agent/**
-    excludePathPatterns: /api/sys-user/**,/api/file/agent/uploadAnyType
+    excludePathPatterns: /api/sys-user/**,/api/file/agent/uploadAnyType,/api/brandDictionary/agent/getBrandDicListByPCode
   admin-authentication:
     addPathPatterns: /api/*/admin/**
     excludePathPatterns: /api/sys-manager/*/login,/api/file/admin/upload
