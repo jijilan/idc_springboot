@@ -232,4 +232,9 @@ public class BackStageServiceImpl implements IBackStageService {
     public List<BrandProductInforListExcle> getBrandProductInforList(String beginDate, String endDate) {
         return backStageMapper.getBrandProductInforList(beginDate,endDate);
     }
+
+    @Override
+    public List<Map> getsysUserList(Map parMap) {
+        return backStageMapper.getsysUserList(parMap);
+    }
 }

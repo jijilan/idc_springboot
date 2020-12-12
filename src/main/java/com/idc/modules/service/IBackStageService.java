@@ -25,4 +25,5 @@ public interface IBackStageService{
 
     IPage<Map> getBrandProductInforList(QPage qPage,String beginDate,String endDate);
     List<BrandProductInforListExcle> getBrandProductInforList(String beginDate, String endDate);
+    List<Map> getsysUserList(Map parMap);
 }

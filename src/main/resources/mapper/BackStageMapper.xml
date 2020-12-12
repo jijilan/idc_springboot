@@ -117,4 +117,8 @@
             and date(tab_bas.add_time) &lt;= date(#{endDate})
         </if>
     </select>
+    <select id="getsysUserList" parameterType="java.util.Map"  resultType="java.util.Map">
+        select tab_user.id,tab_type.c_name,brand_name,user_name,tab_user.create_time,case when is_active=0 then'正常' else '停用' end as useactive  from sys_user tab_user,brand_user_role tab_role,brand_basic_infor tab_bas,company_type tab_type
+        where tab_user.id=tab_role.user_id and tab_role.c_type=tab_user.c_type and tab_bas.id=tab_role.brand_id and tab_type.c_type=tab_user.c_type
+    </select>
 </mapper>

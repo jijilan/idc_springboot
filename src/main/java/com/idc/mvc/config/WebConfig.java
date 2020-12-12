@@ -71,9 +71,9 @@ public class WebConfig implements WebMvcConfigurer {
 
 
         // 后台拦截器
-//        registry.addInterceptor(backAuthenticationInterceptor())
-//                .addPathPatterns(interceptorResource.getAdminAuthenticationAddPathPatterns())
-//                .excludePathPatterns(interceptorResource.getAdminAuthenticationExcludePathPatterns());
+        registry.addInterceptor(backAuthenticationInterceptor())
+                .addPathPatterns(interceptorResource.getAdminAuthenticationAddPathPatterns())
+                .excludePathPatterns(interceptorResource.getAdminAuthenticationExcludePathPatterns());
 
         registry.addInterceptor(backAuthorizationInterceptor())
                 .addPathPatterns(interceptorResource.getAdminAuthorizationAddPathPatterns())
