@@ -107,5 +107,14 @@
                 and date(tab_bas.add_time) &lt;= date(#{endDate})
             </if>
     </select>
-
+    <select id="getBrandProductInforList" resultType="com.idc.modules.entity.excle.BrandProductInforListExcle">
+        select brand_name as brandName,REPLACE(REPLACE(REPLACE(tab_dic.remark,'&lt;p&gt;',''),'&lt;/p&gt;',''),'&lt;br&gt;','') as shuomsl,pinpai,xuliexh,case when is_original=0 then '否' else '是' end as isOriginal,guigecanshu,pianliqk,price,discount,tab_pro.remark from brand_basic_infor tab_bas,brand_summary tab_sum,brand_summary_product tab_pro,brand_dictionary as tab_dic
+        where tab_bas.c_type=1 and tab_bas.id=tab_sum.brand_id and tab_pro.sumary_id=tab_sum.id and tab_dic.code=tab_pro.dic_code
+        <if test="endDate != null and endDate !=''">
+            and date(tab_bas.add_time) &lt;= date(#{endDate})
+        </if>
+        <if test="endDate != null and endDate !=''">
+            and date(tab_bas.add_time) &lt;= date(#{endDate})
+        </if>
+    </select>
 </mapper>

@@ -10,10 +10,7 @@ import com.idc.common.utils.ExcelUtil;
 import com.idc.modules.controller.base.BaseController;
 import com.idc.modules.entity.BrandBasicInfor;
 import com.idc.modules.entity.BrandPerson;
-import com.idc.modules.entity.excle.BrandCountExcle;
-import com.idc.modules.entity.excle.BrandInforListExcle;
-import com.idc.modules.entity.excle.BrandSummaryInforExcel;
-import com.idc.modules.entity.excle.EnterpriseInforExcle;
+import com.idc.modules.entity.excle.*;
 import com.idc.modules.model.QPage;
 import com.idc.modules.service.*;
 import lombok.extern.slf4j.Slf4j;
@@ -209,6 +206,37 @@ public class BackStageController extends BaseController {
     public void exportBrandSummaryInforList(HttpServletRequest request, HttpServletResponse response,String beginDate,String endDate) {
         List<BrandSummaryInforExcel> brandSummaryInforExcels=iBackStageService.getBrandSummaryInforList(beginDate,endDate);
         ExcelUtil.defaultExport(brandSummaryInforExcels,BrandSummaryInforExcel.class, DateUtils.getCurrentDateTime(DateUtils.DATE_TIME_FORMAT_UNSIGNED) +".xls",response,new ExportParams());
+    }
+    /**
+     * 统计管理-申报品牌产品规格参数一览表-列表
+     * @param request
+     * @param offset 当前页数 此处使用integer否则会报错
+     * @param limit 每页条数
+     * @param beginDate 开始日期
+     * @param endDate 结束日期
+     * @return
+     */
+    @PostMapping(value = "/getBrandProductInforList")
+    public ResultView getBrandProductInforList(HttpServletRequest request,String beginDate,String endDate,Integer offset,Integer limit) {
+        QPage qPage=new QPage();
+        if(EmptyUtil.isNotEmpty(offset) && EmptyUtil.isNotEmpty(limit)){
+            qPage.setLimit(limit);
+            qPage.setOffset(offset);
+        }
+        IPage<Map> productInforList=iBackStageService.getBrandProductInforList(qPage,beginDate,endDate);
+        return ResultView.ok(productInforList);
+    }
+    /**
+     * 统计管理-申报品牌产品规格参数一览表-导出
+     * @param request
+     * @param response
+     * @param beginDate 开始日期
+     * @param endDate 结束日期
+     */
+    @PostMapping(value = "/exportBrandProductInforList")
+    public void exportBrandProductInforList(HttpServletRequest request, HttpServletResponse response,String beginDate,String endDate) {
+        List<BrandProductInforListExcle> brandProductInforList=iBackStageService.getBrandProductInforList(beginDate,endDate);
+        ExcelUtil.defaultExport(brandProductInforList,BrandProductInforListExcle.class, DateUtils.getCurrentDateTime(DateUtils.DATE_TIME_FORMAT_UNSIGNED) +".xls",response,new ExportParams());
     }
 
 }

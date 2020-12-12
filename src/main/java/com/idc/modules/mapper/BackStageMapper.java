@@ -2,10 +2,7 @@ package com.idc.modules.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.idc.modules.entity.excle.BrandCountExcle;
-import com.idc.modules.entity.excle.BrandInforListExcle;
-import com.idc.modules.entity.excle.BrandSummaryInforExcel;
-import com.idc.modules.entity.excle.EnterpriseInforExcle;
+import com.idc.modules.entity.excle.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -24,4 +21,7 @@ public interface BackStageMapper{
 
     List<BrandSummaryInforExcel> getBrandSummaryInforList(IPage ipage, @Param("beginDate") String beginDate, @Param("endDate")String endDate);
     List<BrandSummaryInforExcel> getBrandSummaryInforList(@Param("beginDate") String beginDate, @Param("endDate")String endDate);
+
+    List<BrandProductInforListExcle> getBrandProductInforList(IPage ipage, @Param("beginDate") String beginDate, @Param("endDate")String endDate);
+    List<BrandProductInforListExcle> getBrandProductInforList(@Param("beginDate") String beginDate, @Param("endDate")String endDate);
 }
