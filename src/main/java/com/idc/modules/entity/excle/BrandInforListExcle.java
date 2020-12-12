@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class BrandInforListExcle {
     private int id;
+    private int cType;
     @Excel(name="申报企业类型",width = 20D)
     private String cname;
     @Excel(name="申报企业",width = 20D)

@@ -14,7 +14,7 @@ public interface IBackStageService{
     int getBrandManuId(int id);
     Map getSumarryInfor(int id);
     Map getBasicInfor(int id);
-    Map getMaterialInfor(int id);
+    Map getMaterialInfor(int id,int daiId);
     BrandCountExcle getSummaryNum(String beginDate,String endDate);
 
     IPage<Map> getEnterpriseInforList(QPage qPage,String beginDate,String endDate);

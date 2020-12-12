@@ -3,7 +3,7 @@
 <mapper namespace="com.idc.modules.mapper.BackStageMapper">
     <!--查询该人员的品牌证照信息列表 -->
     <select id="selectBrandPage" parameterType="java.util.Map" resultType="com.idc.modules.entity.excle.BrandInforListExcle">
-       select tab_bas.id,tab_type.c_name,tab_bas.brand_name,tab_dic.name as qyxz_name,tab_bas.chanpmc,tab_per.p_name
+       select tab_bas.id,tab_bas.c_type cType,tab_type.c_name,tab_bas.brand_name,tab_dic.name as qyxz_name,tab_bas.chanpmc,tab_per.p_name
         ,case when tab_bas.complete =0 then '申报中' else '已完成' end as complete,DATE_FORMAT(tab_bas.add_time,'%Y-%m-%d %H:%i:%s') as add_time from brand_basic_infor tab_bas,company_type as tab_type,(select * from brand_dictionary where p_code='A') as tab_dic
         ,brand_person tab_per
         where tab_bas.id in (

@@ -98,6 +98,7 @@ public class BackStageController extends BaseController {
      */
     @PostMapping(value = "/getBrandDetailById")
     public ResultView getBrandDetailById(@NotNull(message = "id不能为空") int id){
+        int daiId=0;
         Map resMap=new HashMap();
         //1.承诺书获取当前id的数据
         BrandBasicInfor brandBasicInfor=iBrandBasicInforService.getById(id);
@@ -107,14 +108,14 @@ public class BackStageController extends BaseController {
         resMap.put("chengns",brandBasicInfor.getChengns());
         // **若当前id为代理商类型，则获取相应的制造商id进行获取数据**
         if(brandBasicInfor.getCType()==2){
-            id=iBackStageService.getBrandManuId(id);
+            daiId=iBackStageService.getBrandManuId(id);
         }
         //2.基本信息
         resMap.put("basInfor",iBackStageService.getBasicInfor(id));
         //3.简介基本信息
         resMap.put("sumarryInfor",iBackStageService.getSumarryInfor(id));
         //4.证明材料信息
-        resMap.put("materialInfor",iBackStageService.getMaterialInfor(id));
+        resMap.put("materialInfor",iBackStageService.getMaterialInfor(id,daiId));
         return ResultView.ok(resMap);
     }
 

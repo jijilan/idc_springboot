@@ -152,13 +152,14 @@ public class BackStageServiceImpl implements IBackStageService {
      * @return
      */
     @Override
-    public Map getMaterialInfor(int id) {
+    public Map getMaterialInfor(int id,int daiId) {
         Map resMap=new HashMap();
         // 证明材料 1(基本信息证明）、2（近三年营收情况）、5（履约评价情况）
         List<Integer> brandIds=new ArrayList<>();
         brandIds.add(id);
+        brandIds.add(daiId);
         List<Map> basRevPerfMaps=iBrandBasRevPerfService.getBrandBasLicense(brandIds);
-        resMap.put("basRevPerf",ResultData.ok("证明材料 1(基本信息证明）、2（近三年营收情况）、5（履约评价情况）",basRevPerfMaps.size()!=0?basRevPerfMaps.get(0):null));
+        resMap.put("basRevPerf",ResultData.ok("证明材料 1(基本信息证明）、2（近三年营收情况）、5（履约评价情况）",basRevPerfMaps.size()!=0?basRevPerfMaps:null));
         // 证明材料3（企业信用）、4（产品质量）、6（建筑面积）、7（管理体系认证）、8(市场占有率)
         List<Map> basCreQuaMaps=iBrandBasCreQuaService.getBrandBasLicense(id);
         resMap.put("basCreQua",ResultData.ok("证明材料3（企业信用）、4（产品质量）、6（建筑面积）、7（管理体系认证）、8(市场占有率)",basCreQuaMaps.size()!=0?basCreQuaMaps.get(0):null));
