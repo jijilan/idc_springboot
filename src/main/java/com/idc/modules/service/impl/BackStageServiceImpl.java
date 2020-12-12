@@ -8,9 +8,7 @@ import com.idc.common.result.ResultData;
 import com.idc.common.result.ResultView;
 import com.idc.common.utils.EmptyUtil;
 import com.idc.modules.entity.*;
-import com.idc.modules.entity.excle.BrandCountExcle;
-import com.idc.modules.entity.excle.BrandInforListExcle;
-import com.idc.modules.entity.excle.EnterpriseInforExcle;
+import com.idc.modules.entity.excle.*;
 import com.idc.modules.mapper.BackStageMapper;
 import com.idc.modules.model.QPage;
 import com.idc.modules.service.*;
@@ -209,5 +207,29 @@ public class BackStageServiceImpl implements IBackStageService {
     @Override
     public List<EnterpriseInforExcle> getEnterpriseInforList(String beginDate, String endDate) {
         return backStageMapper.getEnterpriseInforList(beginDate,endDate);
+    }
+
+    @Override
+    public IPage<Map> getBrandSummaryInforList(QPage qPage, String beginDate, String endDate) {
+        IPage ipage = new Page(qPage.getOffset(), qPage.getLimit());
+        ipage.setRecords(backStageMapper.getBrandSummaryInforList(ipage, beginDate,endDate));
+        return ipage;
+    }
+
+    @Override
+    public List<BrandSummaryInforExcel> getBrandSummaryInforList(String beginDate, String endDate) {
+        return backStageMapper.getBrandSummaryInforList(beginDate,endDate);
+    }
+
+    @Override
+    public IPage<Map> getBrandProductInforList(QPage qPage, String beginDate, String endDate) {
+        IPage ipage = new Page(qPage.getOffset(), qPage.getLimit());
+        ipage.setRecords(backStageMapper.getBrandProductInforList(ipage, beginDate,endDate));
+        return ipage;
+    }
+
+    @Override
+    public List<BrandProductInforListExcle> getBrandProductInforList(String beginDate, String endDate) {
+        return backStageMapper.getBrandProductInforList(beginDate,endDate);
     }
 }

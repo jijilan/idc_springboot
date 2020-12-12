@@ -72,5 +72,49 @@
                 and date(tab_bas.add_time) &lt;= date(#{endDate})
             </if>
     </select>
-
+    <select id="getBrandSummaryInforList" resultType="com.idc.modules.entity.excle.BrandSummaryInforExcel">
+        SELECT
+            brand_name,
+            COALESCE ( tab_rev.chenglnx, 0 ) AS chenglnx,
+            tab_bas.zhucesjzijin,
+            ROUND( ( tab_rev.yingysr_one + tab_rev.yingysr_two + tab_rev.yingysr_three ) / 3, 2 ) AS yingysr,
+            COALESCE ( tab_cre.jdzjzmj, 0 ) AS jdzjzmj,
+            COALESCE ( tab_cre.txyxsc, 0 ) txyxsc,
+            COALESCE ( tab_cre.sczyl, 0 ) sczyl,
+            zlfamnum,zlxyynum,zlxxnum,fmnum,
+            hjgjnum,gjsjnum,gjshijnum,
+            tab_after.dlwz,
+            tab_after.shxysj,
+            tab_after.mfwbq
+        FROM
+            brand_basic_infor tab_bas,
+            brand_bas_rev_perf tab_rev,
+            brand_bas_cre_qua tab_cre,
+            brand_bas_aftersale AS tab_after,
+            (select brand_id,sum(case when zhllx='C0101' then 1 else 0 end) as zlfamnum,sum(case when zhllx='C0102' then 1 else 0 end) as zlxyynum,sum(case when zhllx='C0103' then 1 else 0 end) as zlxxnum,sum(1) as fmnum from brand_bas_patent group by brand_id) as tab_fm,
+            (select brand_id,sum(case when huojjb='C0201' then 1 else 0 end) as hjgjnum,sum(case when huojjb='C0202' then 1 else 0 end) as gjsjnum,sum(case when huojjb='C0203' then 1 else 0 end) as gjshijnum,sum(1) as hjnum from brand_bas_awarded group by brand_id) as tab_hj
+        WHERE
+            c_type = 1
+            AND tab_bas.id = tab_rev.brand_id
+            AND tab_bas.id = tab_cre.brand_id
+            AND tab_bas.id = tab_after.brand_id
+            AND tab_bas.id = tab_fm.brand_id
+            AND tab_bas.id = tab_hj.brand_id
+            <if test="beginDate != null and beginDate !=''">
+                and date(tab_bas.add_time) &gt;= date(#{beginDate})
+            </if>
+            <if test="endDate != null and endDate !=''">
+                and date(tab_bas.add_time) &lt;= date(#{endDate})
+            </if>
+    </select>
+    <select id="getBrandProductInforList" resultType="com.idc.modules.entity.excle.BrandProductInforListExcle">
+        select brand_name as brandName,REPLACE(REPLACE(REPLACE(tab_dic.remark,'&lt;p&gt;',''),'&lt;/p&gt;',''),'&lt;br&gt;','') as shuomsl,pinpai,xuliexh,case when is_original=0 then '否' else '是' end as isOriginal,guigecanshu,pianliqk,price,discount,tab_pro.remark from brand_basic_infor tab_bas,brand_summary tab_sum,brand_summary_product tab_pro,brand_dictionary as tab_dic
+        where tab_bas.c_type=1 and tab_bas.id=tab_sum.brand_id and tab_pro.sumary_id=tab_sum.id and tab_dic.code=tab_pro.dic_code
+        <if test="endDate != null and endDate !=''">
+            and date(tab_bas.add_time) &lt;= date(#{endDate})
+        </if>
+        <if test="endDate != null and endDate !=''">
+            and date(tab_bas.add_time) &lt;= date(#{endDate})
+        </if>
+    </select>
 </mapper>
