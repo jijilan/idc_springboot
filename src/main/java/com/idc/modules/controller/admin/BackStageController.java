@@ -106,6 +106,8 @@ public class BackStageController extends BaseController {
         // **若当前id为代理商类型，则获取相应的制造商id进行获取数据**
         if(brandBasicInfor.getCType()==2){
             daiId=iBackStageService.getBrandManuId(id);
+            //2.基本信息
+            resMap.put("basInforDail",iBackStageService.getBasicInfor(daiId));
         }
         //2.基本信息
         resMap.put("basInfor",iBackStageService.getBasicInfor(id));
