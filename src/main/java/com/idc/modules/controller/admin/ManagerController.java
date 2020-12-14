@@ -150,7 +150,9 @@ public class ManagerController extends BaseController {
      */
     @GetMapping("/getManagetList")
     public ResultView getManagetList(QPage qPage) {
-        IPage<SysManager> iPage = iSysManagerService.page(new Page(qPage.getOffset(), qPage.getLimit()), null);
+        QueryWrapper<SysManager> queryWrapper=new QueryWrapper<>();
+        queryWrapper.lambda().orderByAsc(SysManager::getCtime);
+        IPage<SysManager> iPage = iSysManagerService.page(new Page(qPage.getOffset(), qPage.getLimit()), queryWrapper);
         return ResultView.ok(iPage);
     }
 
