@@ -20,5 +20,6 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
 
     void updateLastLoginTime(@Param("id") int id);
 
+    void activeSysUser(@Param("id") int id);
 
 }

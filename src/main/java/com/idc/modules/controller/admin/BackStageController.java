@@ -1,7 +1,6 @@
-package com.idc.modules.controller.agent;
+package com.idc.modules.controller.admin;
 
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.idc.common.result.ResultView;
 import com.idc.common.utils.DateUtils;
@@ -9,10 +8,10 @@ import com.idc.common.utils.EmptyUtil;
 import com.idc.common.utils.ExcelUtil;
 import com.idc.modules.controller.base.BaseController;
 import com.idc.modules.entity.BrandBasicInfor;
-import com.idc.modules.entity.BrandPerson;
 import com.idc.modules.entity.excle.*;
 import com.idc.modules.model.QPage;
-import com.idc.modules.service.*;
+import com.idc.modules.service.IBackStageService;
+import com.idc.modules.service.IBrandBasicInforService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -20,10 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;

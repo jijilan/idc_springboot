@@ -25,5 +25,6 @@ public interface BackStageMapper{
     List<BrandProductInforListExcle> getBrandProductInforList(IPage ipage, @Param("beginDate") String beginDate, @Param("endDate")String endDate);
     List<BrandProductInforListExcle> getBrandProductInforList(@Param("beginDate") String beginDate, @Param("endDate")String endDate);
 
-    List<Map> getsysUserList(@Param("paraMap")Map<String,Object> map);
+    List<SysUserExcle> getsysUserList(@Param("paraMap")Map<String,Object> map);
+    List<SysUserExcle> getsysUserList(IPage ipage,@Param("paraMap")Map<String,Object> map);
 }

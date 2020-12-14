@@ -80,7 +80,9 @@ public class SysUserController  extends BaseController {
         }
         password=MD5Util.getMd5Code(password);
         SysUser sysUser = iSysUserService.loginByUserName(userName,password);
-
+        if(sysUser.getIsActive()==1){
+            return ResultView.error("账号已被停用!");
+        }
         if (EmptyUtil.isNotEmpty(sysUser)) {
             // 更新当前用户的最后登陆时间
             iSysUserService.updateLastLoginTime(sysUser.getId());
@@ -115,6 +117,9 @@ public class SysUserController  extends BaseController {
         QueryWrapper<SysUser> qw = new QueryWrapper<>();
         qw.lambda().eq(SysUser::getPhoneNum, phoneNum);
         SysUser sysUser = iSysUserService.getOne(qw);
+        if(sysUser.getIsActive()==1){
+            return ResultView.error("账号已被停用!");
+        }
         sysUser.setPassWord("");
         if (EmptyUtil.isNotEmpty(sysUser)) {
             String token = jwtToken(SysConstant.MANAGER_ID, sysUser.getId()+"", sysUser, SysConstant.ADMIN_AUTH_TIMEOUT);

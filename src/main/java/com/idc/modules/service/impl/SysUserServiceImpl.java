@@ -36,4 +36,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
          baseMapper.updateLastLoginTime(id);
     }
 
+    @Override
+    public void activeSysUser(int id){
+        baseMapper.activeSysUser(id);
+    }
 }

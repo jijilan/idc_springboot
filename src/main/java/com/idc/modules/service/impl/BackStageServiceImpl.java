@@ -235,7 +235,15 @@ public class BackStageServiceImpl implements IBackStageService {
     }
 
     @Override
-    public List<Map> getsysUserList(Map parMap) {
+    public IPage<Map> selectSysUserList(QPage qPage, Map parMap) {
+        IPage ipage = new Page(qPage.getOffset(), qPage.getLimit());
+        ipage.setRecords(backStageMapper.getsysUserList(ipage,parMap));
+        return ipage;
+    }
+
+    @Override
+    public List<SysUserExcle> selectSysUserList(Map parMap) {
         return backStageMapper.getsysUserList(parMap);
     }
+
 }
