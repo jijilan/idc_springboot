@@ -56,6 +56,7 @@ public class ResultView implements Serializable {
     private ResultView() {
         this.code = ResultEnum.CODE_200.getCode();
         this.msg = ResultEnum.CODE_200.getMsg();
+        this.time = DateUtils.getCurrentDateTime();
     }
 
     private ResultView(Object data) {
