@@ -82,7 +82,7 @@
             COALESCE ( tab_cre.txyxsc, 0 ) txyxsc,
             COALESCE ( tab_cre.sczyl, 0 ) sczyl,
             zlfamnum,zlxyynum,zlxxnum,fmnum,
-            hjgjnum,gjsjnum,gjshijnum,
+            hjgjnum,gjsjnum,gjshijnum,hjnum,
             tab_after.dlwz,
             tab_after.shxysj,
             tab_after.mfwbq
