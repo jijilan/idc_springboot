@@ -58,8 +58,10 @@ public class SysLogServiceImpl extends ServiceImpl<SysLogMapper, SysLog> impleme
         if (methodName.contains(login)) {
             ResultView resultView = (ResultView) joinPoint.proceed();
             String token = (String) resultView.getData();
-            String managerId = JwtUtil.getUniqueId(token, SysConstant.MANAGER_ID);
-            sysManager = (SysManager) redisService.getAuthorizedSubject(managerId);
+            if(token!=null){
+                String managerId = JwtUtil.getUniqueId(token, SysConstant.MANAGER_ID);
+                sysManager = (SysManager) redisService.getAuthorizedSubject(managerId);
+            }
         } else {
             sysManager = (SysManager) request.getAttribute(SysConstant.MANAGER);
         }
