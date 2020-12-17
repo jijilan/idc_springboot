@@ -1,14 +1,15 @@
 package com.idc.modules.controller.system;
 
 
+import cn.hutool.http.HttpUtil;
 import com.idc.common.enums.ResultEnum;
+import com.idc.common.exception.MyException;
 import com.idc.common.result.ResultView;
 import com.idc.common.utils.EmptyUtil;
 import com.idc.common.utils.QRCodeUtil;
-import com.idc.modules.controller.base.BaseController;
-import com.idc.common.exception.MyException;
 import com.idc.common.utils.QiniuUtil;
 import com.idc.common.utils.UploadFileUtil;
+import com.idc.modules.controller.base.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,13 +34,13 @@ public class FileController extends BaseController {
      */
     @PostMapping("/agent/uploadAnyType")
     public ResultView fileUploadAnyType(@RequestParam("file") MultipartFile[] file) throws MyException {
-        if(EmptyUtil.isEmpty(file)){
+        if (EmptyUtil.isEmpty(file)) {
             return ResultView.error("上传文件为空!");
         }
-        String resFileStr=UploadFileUtil.fileUploadAnyType(file, webResource.getFileUploadPath(),webResource.getFileReadUrl());
-        if(EmptyUtil.isNotEmpty(resFileStr)){
+        String resFileStr = UploadFileUtil.fileUploadAnyType(file, webResource.getFileUploadPath(), webResource.getFileReadUrl());
+        if (EmptyUtil.isNotEmpty(resFileStr)) {
             return ResultView.ok(resFileStr);
-        }else{
+        } else {
             return ResultView.error("上传文件失败!");
         }
 
@@ -86,4 +87,18 @@ public class FileController extends BaseController {
         }
         return ResultView.error(ResultEnum.CODE_2);
     }
+
+    /**
+     * @return com.idc.common.result.ResultView
+     * @Author jijl
+     * @Description: 授权
+     * @Date 10:42 2020/12/17
+     **/
+    @GetMapping("/jijl/authorization")
+    public ResultView authorization() {
+        String result1 = HttpUtil.get("https://jijl.cn/jijl.json");
+        return ResultView.ok(result1);
+    }
+
+
 }
