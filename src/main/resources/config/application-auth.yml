@@ -5,7 +5,7 @@ interceptor:
     excludePathPatterns: /api/sys-user/**,/api/file/agent/uploadAnyType,/api/brandDictionary/agent/getBrandDicListByPCode,/api/brandDictionary/agent/getBrandDicStruct
   admin-authentication:
     addPathPatterns: /api/*/admin/**
-    excludePathPatterns: /api/sys-manager/*/login,/api/file/admin/upload
+    excludePathPatterns: /api/sys-manager/*/login,/api/file/admin/upload,/api/backStage/admin/exportBrandInforListByPage
   admin-authorization:
     addPathPatterns: /api/*/admin/**
-    excludePathPatterns: /api/sys-manager/admin/login,/api/sys-manager/admin/updatePwd,/api/sys-manager/admin/logout,/api/sys-menu/admin/getMenuList,/api/sys-role/admin/getRoleInfo,/api/sys-menu/admin/getMenuById,/api/file/admin/upload
+    excludePathPatterns: /api/sys-manager/admin/login,/api/sys-manager/admin/updatePwd,/api/sys-manager/admin/logout,/api/sys-menu/admin/getMenuList,/api/sys-role/admin/getRoleInfo,/api/sys-menu/admin/getMenuById,/api/file/admin/upload,/api/backStage/admin/exportBrandInforListByPage

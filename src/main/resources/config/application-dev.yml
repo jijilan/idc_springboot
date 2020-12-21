@@ -4,9 +4,9 @@ spring:
     druid:
       driver-class-name: com.mysql.jdbc.Driver
       connection-init-sqls: set names utf8mb4;
-      url: jdbc:mysql://47.106.169.138:3306/idc?useUnicode=true&useSSL=false
-      username: root
-      password: jijl
+      url:
+      username:
+      password:
       initial-size: 5
       min-idle: 5
       max-active: 20
@@ -30,9 +30,9 @@ spring:
   ## redis相关配置
   redis:
     database: 6
-    host: 47.106.169.138
-    password: jijilan..
-    port: 6380
+    host:
+    password:
+    port:
     timeout: 6000ms  # 连接超时时长（毫秒）
     jedis:
       pool:
