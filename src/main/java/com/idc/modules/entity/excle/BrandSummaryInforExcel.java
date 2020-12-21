@@ -29,7 +29,7 @@ public class BrandSummaryInforExcel {
     private String zlxyynum;
     @Excel(name="拟入库品牌产品相关专利证书#外观",width = 20D)
     private String zlxxnum;
-    @Excel(name="拟入库品牌产品相关专利证书#合计",width = 20D)
+    @Excel(name="拟入库品牌产品相关专利证书#总数(按1个发明专利=2.5个实用新型专利=5个外观专利)",width = 20D)
     private String fmnum;
     @Excel(name="拟入库品牌产品获奖情况#国家级",width = 20D)
     private String hjgjnum;
@@ -37,7 +37,7 @@ public class BrandSummaryInforExcel {
     private String gjsjnum;
     @Excel(name="拟入库品牌产品获奖情况#市级",width = 20D)
     private String gjshijnum;
-    @Excel(name="拟入库品牌产品获奖情况#合计",width = 20D)
+    @Excel(name="拟入库品牌产品获奖情况#(按1个国家级江西=2.5个省部级奖项=5个市级奖项)",width = 20D)
     private String hjnum;
     @Excel(name="售后服务机构地理位置",width = 20D)
     private String dlwz;

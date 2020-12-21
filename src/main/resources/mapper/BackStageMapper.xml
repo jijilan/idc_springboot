@@ -81,8 +81,10 @@
             COALESCE ( tab_cre.jdzjzmj, 0 ) AS jdzjzmj,
             COALESCE ( tab_cre.txyxsc, 0 ) txyxsc,
             COALESCE ( tab_cre.sczyl, 0 ) sczyl,
-            zlfamnum,zlxyynum,zlxxnum,fmnum,
-            hjgjnum,gjsjnum,gjshijnum,hjnum,
+            zlfamnum,zlxyynum,zlxxnum,
+            (zlfamnum*5+zlxyynum*2+zlxxnum) as fmnum,
+            hjgjnum,gjsjnum,gjshijnum,
+            (hjgjnum*5+gjsjnum*2+gjshijnum) as hjnum,
             tab_after.dlwz,
             tab_after.shxysj,
             tab_after.mfwbq
@@ -91,8 +93,8 @@
             brand_bas_rev_perf tab_rev,
             brand_bas_cre_qua tab_cre,
             brand_bas_aftersale AS tab_after,
-            (select brand_id,sum(case when zhllx='C0101' then 1 else 0 end) as zlfamnum,sum(case when zhllx='C0102' then 1 else 0 end) as zlxyynum,sum(case when zhllx='C0103' then 1 else 0 end) as zlxxnum,sum(1) as fmnum from brand_bas_patent group by brand_id) as tab_fm,
-            (select brand_id,sum(case when huojjb='C0201' then 1 else 0 end) as hjgjnum,sum(case when huojjb='C0202' then 1 else 0 end) as gjsjnum,sum(case when huojjb='C0203' then 1 else 0 end) as gjshijnum,sum(1) as hjnum from brand_bas_awarded group by brand_id) as tab_hj
+            (select brand_id,sum(case when zhllx='C0101' then 1 else 0 end) as zlfamnum,sum(case when zhllx='C0102' then 1 else 0 end) as zlxyynum,sum(case when zhllx='C0103' then 1 else 0 end) as zlxxnum from brand_bas_patent group by brand_id) as tab_fm,
+            (select brand_id,sum(case when huojjb='C0201' then 1 else 0 end) as hjgjnum,sum(case when huojjb='C0202' then 1 else 0 end) as gjsjnum,sum(case when huojjb='C0203' then 1 else 0 end) as gjshijnum from brand_bas_awarded group by brand_id) as tab_hj
         WHERE
             c_type = 1
             AND tab_bas.id = tab_rev.brand_id
