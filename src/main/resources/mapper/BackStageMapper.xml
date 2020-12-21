@@ -30,7 +30,7 @@
     </select>
 
     <select id="getSummaryNum" resultType="com.idc.modules.entity.excle.BrandCountExcle">
-        select sum(case when c_type=1 then 1 else 0 end) as macNum,sum(case when c_type=1 then 1 else 0 end) as agentNum,sum(1) as num from brand_basic_infor tab_bas
+        select sum(case when c_type=1 then 1 else 0 end) as macNum,sum(case when c_type=2 then 1 else 0 end) as agentNum,sum(1) as num from brand_basic_infor tab_bas
         where tab_bas.id in ( select brand_id from sys_user tab_a,brand_user_role tab_b where tab_a.id=tab_b.user_id and tab_a.c_type=tab_b.c_type)
         <if test="beginDate != null and beginDate !=''">
             and date(tab_bas.add_time) &gt;= date(#{beginDate})
