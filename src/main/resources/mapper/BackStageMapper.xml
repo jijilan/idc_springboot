@@ -118,11 +118,13 @@
         </if>
     </select>
     <select id="getsysUserList" parameterType="java.util.Map"  resultType="com.idc.modules.entity.excle.SysUserExcle">
-        select tab_user.id,tab_type.c_name as typeName,brand_name as brandName,user_name as userName,tab_user.create_time as createTime,
-        case when is_active=0 then'正常' else '停用' end as useactive  from sys_user tab_user,brand_user_role tab_role,brand_basic_infor tab_bas,company_type tab_type
-        where tab_user.id=tab_role.user_id and tab_role.c_type=tab_user.c_type and tab_bas.id=tab_role.brand_id and tab_type.c_type=tab_user.c_type
+        select tab_user.id,tab_type.c_name as typeName,coalesce(tab_temp.brand_name,'未填报企业') as brandName,user_name as userName,tab_user.create_time as createTime,
+        case when is_active=0 then'正常' else '停用' end as useactive  from sys_user tab_user
+        inner join
+        company_type tab_type
+        on tab_type.c_type=tab_user.c_type
         <if test="paraMap.qiylx != null and paraMap.qiylx !=''">
-            and tab_bas.c_type=#{paraMap.qiylx}
+            and tab_user.c_type=#{paraMap.qiylx}
         </if>
         <if test="paraMap.userName != null and paraMap.userName !=''">
             AND tab_user.user_name LIKE CONCAT('%',#{paraMap.userName},'%')
@@ -130,6 +132,9 @@
         <if test="paraMap.isActive != null and paraMap.isActive !=''">
             and tab_user.is_active=#{paraMap.isActive}
         </if>
+        left join
+        (select user_id,brand_name,tab_bas.c_type,c_name from brand_user_role tab_role,brand_basic_infor tab_bas,company_type tab_type where tab_bas.id=tab_role.brand_id and tab_type.c_type=tab_bas.c_type) as tab_temp
+        on tab_user.id=tab_temp.user_id and tab_temp.c_type=tab_user.c_type
         order by tab_user.create_time
     </select>
 </mapper>
