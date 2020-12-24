@@ -25,7 +25,7 @@ public class SysUserExcle {
     @Excel(name="账号",width = 20D)
     private String userName;
 
-    @Excel(name="创建时间",width = 20D)
+    @Excel(name="注册时间",width = 20D)
     private String createTime;
 
     @Excel(name="账号状态",width = 20D)
